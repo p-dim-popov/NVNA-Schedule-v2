@@ -1,11 +1,13 @@
 (function main() {
     const webScrapper = `https://web--scrapper.herokuapp.com/webscrapper`;
+    fetch(`${webScrapper}?url=${encodeURIComponent('http://nvna.eu/schedule/?group=5&queryType=room&Week=10')}`).then();
     const submitBtn = document.getElementById('submitBtn');
     const [codeFromInput, dateFromInput, groupFromInput, lecturerFromInput, roomFromInput] = document.getElementsByTagName('input');
-    const scheduleTable = document.getElementsByTagName('table')[0];
     const contentDiv = document.getElementById('content');
     const periodOption = document.getElementById('period');
     const periodNumberRef = document.getElementById("periodNumber");
+    const downloadBtn = document.getElementById('downloadBtn');
+    let bulkData = [];
     flatpickr(dateFromInput, {});
 
     let weekTemplate;
@@ -16,6 +18,13 @@
     submitBtn.addEventListener('click', submitHandler);
     periodOption.addEventListener('change', changePeriodHandler);
 
+    function downloadBtnHandler()
+    {
+        //TODO: download fn
+    }
+
+    downloadBtn.addEventListener('click', downloadBtnHandler);
+
     async function submitHandler(e)
     {
         e.preventDefault();
@@ -24,11 +33,13 @@
             alert("Избери за к'во търсиш, де!");
             return;
         }
-        if (!dateFromInput.value){
+        if (!dateFromInput.value)
+        {
             const currentDate = new Date();
             dateFromInput.value = `${currentDate.getFullYear()}/${currentDate.getMonth() + 1}/${currentDate.getDate()}`;
         }
 
+        downloadBtn.hidden = true;
         disableSubmitBtn(true);
         let searchingFor;
         if (groupFromInput.checked) searchingFor = 'group';
@@ -37,7 +48,7 @@
         let weekValue = new Date(dateFromInput.value).getWeek();
         let nvnaUrl = `http://nvna.eu/schedule/?group=${codeFromInput.value}&queryType=${searchingFor}&Week=${weekValue}`;
         let url = `${webScrapper}?url=${encodeURIComponent(nvnaUrl)}`;
-        //url = '../testData.json'; //uncomment for working locally
+        url = '../testData.json'; //uncomment for working locally
         let data;
         try
         {
@@ -52,42 +63,70 @@
         {
             disableSubmitBtn(false);
         }
-        contentDiv.innerHTML = '';
-        let requestedDate = new Date(dateFromInput.value);
-        if (periodOption.value === 'day')
+        if (periodOption.value !== 'weeks')
         {
-            let weekContentDiv = createClassesForWeek(data);
-            contentDiv.appendChild(weekContentDiv);
-            [...weekContentDiv.children].forEach(el => {
-                const curDate = new Date(el.firstElementChild.textContent.split(', ')[1]);
-                const a = `${curDate.getFullYear()}/${curDate.getMonth() + 1}/${curDate.getDate()}`;
-                const b = `${requestedDate.getFullYear()}/${requestedDate.getMonth() + 1}/${requestedDate.getDate()}`;
-                if (a === b) return;
-                el.hidden = true;
-            })
-        }
-        else if (periodOption.value === 'week')
-        {
-            let weekContentDiv = createClassesForWeek(data);
-            contentDiv.appendChild(weekContentDiv);
+            contentDiv.innerHTML = '';
+            let requestedDate = new Date(dateFromInput.value);
+            let weekDiv = createClassesForWeek(transformArrayToClassClass(normalizeData(data)));
+            contentDiv.appendChild(weekDiv);
+            if (periodOption.value === 'day')
+            {
+                showOnlyRequestedDay(requestedDate, weekDiv)
+            }
+            bulkData = normalizeData(data);
         }
         else if (periodOption.value === 'weeks')
         {
-            //TODO: fetch some weeks :)
+            const requestedNumberOfWeeks = periodNumberRef.value;
+            nvnaUrl = `http://nvna.eu/schedule/?group=${codeFromInput.value}&queryType=${searchingFor}&Week=${weekValue}`;
+            let tempUrlForFetch;
+            let urls = [];
+            let responseArr;
+            try
+            {
+                for (let i = 0; i < requestedNumberOfWeeks; i++)
+                {
+                    nvnaUrl = `http://nvna.eu/schedule/?group=${+codeFromInput.value}&queryType=${searchingFor}&Week=${+weekValue + i}`;
+                    urls.push(fetch(`${webScrapper}?url=${nvnaUrl}`))
+                }
+                responseArr = await Promise.all(urls);
+            }
+            catch (e)
+            {
+            }
+            contentDiv.innerHTML = '';
+            let dataArr = await responseArr.json();
+            dataArr = dataArr.map(d => transformArrayToClassClass(normalizeData(d)));
+            bulkData = dataArr;
+            dataArr = dataArr.map(d => createClassesForWeek(d));
+            dataArr.forEach(d => contentDiv.appendChild(d))
         }
-        //TODO: download button for data as csv
+
+        downloadBtn.hidden = false;
     }
 
-    function createClassesForWeek(_data)
+    function showOnlyRequestedDay(requestedDate, weekDiv)
     {
-        let classesForWeekByDay = _data
+        [...weekDiv.children].forEach(el => {
+            const curDate = new Date(el.firstElementChild.textContent.split(', ')[1]);
+            const a = `${curDate.getFullYear()}/${curDate.getMonth() + 1}/${curDate.getDate()}`;
+            const b = `${requestedDate.getFullYear()}/${requestedDate.getMonth() + 1}/${requestedDate.getDate()}`;
+            if (a === b) return;
+            el.hidden = true;
+        })
+    }
+
+    function normalizeData(_data)
+    {
+        const daysOfTheWeekBg = ['Понеделник', 'Вторник', 'Сряда', 'Четвъртък', 'Петък', 'Събота', 'Неделя'];
+        return _data
             .reduce((acc, cur, i, arr) => {
                 let day = cur[0].split(', ');
                 if (day && day[1])
                 {
-                    if (getDaysOfTheWeek().includes(day[0]))
+                    if (daysOfTheWeekBg.includes(day[0]))
                     {
-                        let dayObj = {day: day.join(', '), classes: []};
+                        let dayObj = {day: day[0], date: day[1], classes: []};
                         if (arr[i + 1][0] !== 'Няма занятия')
                         {
                             for (let j = 0; j < 13; j++)
@@ -100,24 +139,37 @@
                 }
                 return acc;
             }, []);
-        classesForWeekByDay = classesForWeekByDay
+    }
+
+    function transformArrayToClassClass(classesForWeekByDay)
+    {
+        return classesForWeekByDay
             .map(it => {
                 it.classes = it.classes
-                    .map((c, i, a) => mapArrToClass(c, i, a, it.classes));
+                    .map((c, i) => {
+                        if (c instanceof Class) return c;
+                        let thisClass = new Class(c);
+                        if (thisClass.classPeriod)
+                        {
+                            for (let j = 1; j < thisClass.classPeriod; j++)
+                            {
+                                it.classes[i + j] = thisClass
+                            }
+                        }
+                        return thisClass
+                    });
                 return it
             });
-        let weekHTML = weekTemplate({
-            days: classesForWeekByDay
-                .reduce((acc, cur) => [...acc, {
-                    day: cur.day,
-                    classes:  cur.classes
-                }], [])
-        });
-        let div_ = document.createElement('div');
-        div_.innerHTML = weekHTML;
-        div_.querySelectorAll('li.subject')
+    }
+
+    function createClassesForWeek(classesForWeekByDay)
+    {
+        let weekDiv = document.createElement('div');
+        weekDiv.classList.add('weekDiv');
+        weekDiv.innerHTML = weekTemplate({days: classesForWeekByDay});
+        weekDiv.querySelectorAll('li.subject')
             .forEach(li => li.textContent ? li.addEventListener('click', toggleInfoHandler) : null);
-        return div_;
+        return weekDiv;
     }
 
     function getDataArray(data)
@@ -166,25 +218,6 @@
         catch (e)
         {
         }
-    }
-
-    function getDaysOfTheWeek()
-    {
-        return ['Понеделник', 'Вторник', 'Сряда', 'Четвъртък', 'Петък', 'Събота', 'Неделя'];
-    }
-
-    function mapArrToClass(c, i, arr, origin)
-    {
-        if (c instanceof Class) return c;
-        let thisClass = new Class(c);
-        if (thisClass.classPeriod)
-        {
-            for (let j = 1; j < thisClass.classPeriod; j++)
-            {
-                origin[i + j] = new Class(arr[i])
-            }
-        }
-        return thisClass
     }
 
     function changePeriodHandler(e)
