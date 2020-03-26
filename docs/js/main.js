@@ -48,7 +48,7 @@
         let weekValue = new Date(dateFromInput.value).getWeek();
         let nvnaUrl = `http://nvna.eu/schedule/?group=${codeFromInput.value}&queryType=${searchingFor}&Week=${weekValue}`;
         let url = `${webScrapper}?url=${encodeURIComponent(nvnaUrl)}`;
-        url = '../testData.json'; //uncomment for working locally
+        // url = '../testData.json'; //TODO: uncomment for working locally
         let data;
         try
         {
@@ -78,8 +78,6 @@
         else if (periodOption.value === 'weeks')
         {
             const requestedNumberOfWeeks = periodNumberRef.value;
-            nvnaUrl = `http://nvna.eu/schedule/?group=${codeFromInput.value}&queryType=${searchingFor}&Week=${weekValue}`;
-            let tempUrlForFetch;
             let urls = [];
             let responseArr;
             try
