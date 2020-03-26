@@ -88,14 +88,14 @@
                     urls.push(fetch(`${webScrapper}?url=${nvnaUrl}`))
                 }
                 responseArr = await Promise.all(urls);
-                responseArr = await Promise.all(responseArr.map(y => y.json()))
+                responseArr = await Promise.all(responseArr.map(y => y.json()));
             }
             catch (e)
             {
             }
 
             contentDiv.innerHTML = '';
-            let dataArr = responseArr.map(r => r.contents);
+            let dataArr = responseArr.map(o => getDataArray(o));
             dataArr = dataArr.map(d => transformArrayToClassClass(normalizeData(d)));
             bulkData = dataArr;
             dataArr = dataArr.map(d => createClassesForWeek(d));
