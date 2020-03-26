@@ -1,0 +1,15 @@
+{{#each days}}
+    <ol>
+        <span class="dayOfWeek">{{this.day}}</span>
+        {{#each this.classes}}
+            <li class="subject">
+                {{this.name}}
+                <ul class="info">
+                    <li>{{this.time}}</li>
+                    <li>{{this.groups}}</li>
+                    <li>{{this.lector}}</li>
+                </ul>
+            </li>
+        {{/each}}
+    </ol>
+{{/each}}

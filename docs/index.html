@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>NVNA Schedule v2.0</title>
+
+    <base href=".">
+    <link rel="stylesheet" type="text/css" href="./css/stylesheet.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+</head>
+<body>
+<form class="col-10">
+    <label for="code">Код</label>
+    <input type="text" placeholder="Въведи класно/код/зала" id="code">
+
+    <label for="code">Седмица/дата</label>
+    <input type="text" placeholder="Въведи дата" id="week">
+
+    <div class="radioSearchingFor">
+        <label for="group" class="containerForRadios">
+            За класно
+            <input type="radio" id="group" name="searchingFor" checked>
+        </label>
+        <label for="lecturer" class="containerForRadios">
+            За преподавател
+            <input type="radio" id="lecturer" name="searchingFor">
+        </label>
+        <label for="room" class="containerForRadios">
+            За зала
+            <input type="radio" id="room" name="searchingFor">
+        </label>
+    </div>
+    <label for="period">Изберете за колко време: </label>
+    <select id="period">
+        <option value="day">ден</option>
+        <option value="week">седмица</option>
+        <option id="periodWeeks" value="weeks">седмици</option>
+    </select>
+    <input type="number" id="periodNumber" placeholder="въведи колко (с цифри)" hidden>
+    <button id="submitBtn">Покажи</button>
+</form>
+<div id="content">
+
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.7.3/handlebars.min.js"></script>
+<script src="./js/customClasses.js"></script>
+<script src="./js/getWeekExtension.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script src="./js/main.js"></script>
+</body>
+</html>

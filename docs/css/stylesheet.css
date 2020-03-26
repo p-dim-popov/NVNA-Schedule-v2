@@ -1,0 +1,9 @@
+.containerForRadios{
+    border: white 2px solid;
+    background-color: mediumaquamarine;
+    border-radius: 5px;
+}
+
+ul.info{
+    display: none;
+}
