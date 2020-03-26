@@ -95,7 +95,7 @@
             }
 
             contentDiv.innerHTML = '';
-            let dataArr = responseArr.map(async (r) => (await r.json()).contents);
+            let dataArr = responseArr.map(r => r.contents);
             dataArr = dataArr.map(d => transformArrayToClassClass(normalizeData(d)));
             bulkData = dataArr;
             dataArr = dataArr.map(d => createClassesForWeek(d));
