@@ -85,7 +85,7 @@
                 for (let i = 0; i < requestedNumberOfWeeks; i++)
                 {
                     nvnaUrl = `http://nvna.eu/schedule/?group=${codeFromInput.value}&queryType=${searchingFor}&Week=${+weekValue + i}`;
-                    urls.push(fetch(`${webScrapper}?url=${nvnaUrl}`))
+                    urls.push(fetch(`${webScrapper}?url=${encodeURIComponent(nvnaUrl)}`))
                 }
                 responseArr = await Promise.all(urls);
                 responseArr = await Promise.all(responseArr.map(y => y.json()));
