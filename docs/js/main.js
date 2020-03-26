@@ -20,7 +20,38 @@
 
     function downloadBtnHandler()
     {
-        //TODO: download fn
+        let tsvContent = bulkData
+            .map(d => d.classes
+                .map(c => [d.date, ...c.toArray().map(x => x.trim())]
+                    .join('\t'))
+                .join('\n'))
+            .join('\n')
+            .split('\n')
+            .filter((r, i, arr) =>
+                r.trim() &&
+                arr.indexOf(r) === i &&
+                r.split('\t').length > 1 &&
+                r.split('\t')[1].trim())
+            .join('\n');
+        let filename = prompt('Въведи име на файл', `${dateFromInput.value.replace(/\//g,'-')}.tsv` || `${dateFromInput.value}.tsv`);
+        if (filename)
+        {
+            let file = new Blob([tsvContent], {type: "data:application/octet-stream"});
+            if (window.navigator.msSaveOrOpenBlob) // IE10+
+                window.navigator.msSaveOrOpenBlob(file, filename);
+            else { // Others
+                let a = document.createElement("a"),
+                    url = URL.createObjectURL(file);
+                a.href = url;
+                a.download = filename;
+                document.body.appendChild(a);
+                a.click();
+                setTimeout(function() {
+                    document.body.removeChild(a);
+                    window.URL.revokeObjectURL(url);
+                }, 0);
+            }
+        }
     }
 
     downloadBtn.addEventListener('click', downloadBtnHandler);
@@ -73,7 +104,7 @@
             {
                 showOnlyRequestedDay(requestedDate, weekDiv)
             }
-            bulkData = normalizeData(data);
+            bulkData = transformArrayToClassClass(normalizeData(data));
         }
         else if (periodOption.value === 'weeks')
         {
