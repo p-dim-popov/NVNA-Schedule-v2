@@ -84,7 +84,7 @@
             {
                 for (let i = 0; i < requestedNumberOfWeeks; i++)
                 {
-                    nvnaUrl = `http://nvna.eu/schedule/?group=${+codeFromInput.value}&queryType=${searchingFor}&Week=${+weekValue + i}`;
+                    nvnaUrl = `http://nvna.eu/schedule/?group=${codeFromInput.value}&queryType=${searchingFor}&Week=${+weekValue + i}`;
                     urls.push(fetch(`${webScrapper}?url=${nvnaUrl}`))
                 }
                 responseArr = await Promise.all(urls);
@@ -93,7 +93,7 @@
             {
             }
             contentDiv.innerHTML = '';
-            let dataArr = responseArr.map(async (r) => await r.json());
+            let dataArr = responseArr.map(async (r) => (await r.json()).contents);
             dataArr = dataArr.map(d => transformArrayToClassClass(normalizeData(d)));
             bulkData = dataArr;
             dataArr = dataArr.map(d => createClassesForWeek(d));
