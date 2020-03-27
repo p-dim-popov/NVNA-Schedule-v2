@@ -128,7 +128,7 @@
             contentDiv.innerHTML = '';
             let dataArr = responseArr.map(o => getDataArray(o));
             dataArr = dataArr.map(d => transformArrayToClassClass(normalizeData(d)));
-            bulkData = dataArr;
+            bulkData = dataArr.reduce((acc, cur) => [...acc, ...cur] , []);
             dataArr = dataArr.map(d => createClassesForWeek(d));
             dataArr.forEach(d => contentDiv.appendChild(d))
         }

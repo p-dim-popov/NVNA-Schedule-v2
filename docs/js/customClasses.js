@@ -14,6 +14,6 @@ class Class
 
     toArray()
     {
-        return [ this.time, this.name, this.lecturer, this.groups];
+        return [ ...this.time.split('-'), this.name, this.lecturer, this.groups];
     }
 }
