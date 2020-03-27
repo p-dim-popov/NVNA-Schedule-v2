@@ -1,13 +1,69 @@
+body{
+    background-color: #E1E2E1;
+}
+
+form{
+    background-color: #b3e5fc;
+    width: 100%;
+    padding: 10px;
+    display: block;
+    align-content: center;
+}
+
 .containerForRadios{
-    border: white 2px solid;
-    background-color: mediumaquamarine;
-    border-radius: 5px;
+    padding: 5px;
+    align-content: center;
+    display: inline-block;
+}
+
+.radioSearchingFor{
+    background-color: #e6ffff;
+    border-radius: 2px;
+    display: inline;
+    padding: 2px;
+    margin: 2px;
+    border: solid 0.5px white;
+}
+
+@media only screen and (max-width: 600px){
+    form.mainForm > label {
+        display: block;
+    }
+    .radioSearchingFor{
+        display: block;
+        float: left;
+    }
+}
+
+@media only screen and (max-width: 1300px){
+    
 }
 
 ul.info{
     display: none;
 }
 
-.hidden-display-none-method{
-    display: none;
+label{
+    padding: 5px;
+}
+
+ul, li, ol{
+    width: 100%;
+}
+
+ul > li{
+    background-color: #c5e1a5;
+}
+
+li.subject{
+    background-color: #f8ffd7;
+}
+
+span.dayOfWeek{
+    font-weight: bold;
+    display: block;
+}
+
+ol {
+    background-color: #82b3c9;
 }

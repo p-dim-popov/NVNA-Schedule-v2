@@ -11,37 +11,42 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 </head>
 <body>
-<form class="col-10">
-    <label for="code">Код</label>
-    <input type="text" placeholder="Въведи класно/код/зала" id="code">
+    <form class="mainForm">
+        <label for="code">Код</label>
+        <input type="text" placeholder="Въведи класно/код/зала" id="code" value="12282">
 
-    <label for="code">Седмица/дата</label>
-    <input type="text" placeholder="Въведи дата" id="week">
+        <label for="week">Седмица/дата</label>
+        <input type="text" placeholder="Въведи дата" id="week" class="flatpickr-input" readonly="readonly" value="2020-03-04">
 
-    <div class="radioSearchingFor">
-        <label for="group" class="containerForRadios">
-            За класно
-            <input type="radio" id="group" name="searchingFor" checked>
-        </label>
-        <label for="lecturer" class="containerForRadios">
-            За преподавател
-            <input type="radio" id="lecturer" name="searchingFor">
-        </label>
-        <label for="room" class="containerForRadios">
-            За зала
-            <input type="radio" id="room" name="searchingFor">
-        </label>
-    </div>
-    <label for="period">Изберете за колко време: </label>
-    <select id="period">
-        <option value="day">ден</option>
-        <option value="week">седмица</option>
-        <option id="periodWeeks" value="weeks">седмици</option>
-    </select>
-    <label for="periodNumber"></label>
-    <input type="number" id="periodNumber" placeholder="въведи колко (с цифри)" hidden>
-    <button id="submitBtn">Покажи</button>
-</form>
+        <div class="containerForRadios">
+            <div class="radioSearchingFor">
+                <label for="group">За класно</label>
+                <input type="radio" id="group" name="searchingFor" checked="checked">
+            </div>
+
+            <div class="radioSearchingFor">
+                <label for="lecturer">За преподавател</label>
+                <input type="radio" id="lecturer" name="searchingFor">
+            </div>
+
+            <div class="radioSearchingFor">
+                <label for="room">За зала</label>
+                <input type="radio" id="room" name="searchingFor">
+            </div>
+        </div>
+        <div class="containerPeriod">
+			<label for="period">Изберете за колко време: </label>
+        	<select id="period">
+            <option value="day" selected="selected">ден</option>
+            <option value="week">седмица</option>
+            <option id="periodWeeks" value="weeks">седмици</option>
+        </select>
+
+        </div>
+        <label for="periodNumber"></label>
+        <input type="number" id="periodNumber" placeholder="въведи колко (с цифри)" hidden="">
+        <button id="submitBtn">Покажи</button>
+    </form>
 <div id="content">
 
 </div>
