@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-status-bar-style" content="black">
+	<meta name="apple-mobile-web-app-title" content="Schedule NVNA">
+	<meta name="description" content="A simple schedule app">
+	<meta name="theme-color" content="#b3e5fc" />
+
+	<title>NVNA Schedule v2.0</title>
+
+	<base href=".">
+	<link rel="manifest" href="./manifest.json">
+	<link rel="apple-touch-icon" href="./images/icons/icon-152x152.png">
+
+	<link rel="stylesheet" type="text/css" href="./css/stylesheet.css">
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+</head>
+<body>
+	<div id="content">
+		<p>Няма достъп до интернет! Това приложение работи само online.</p>
+	</div>
+	<button id="downloadBtn" hidden>Изтегли разписание</button>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.7.3/handlebars.min.js"></script>
+	<script src="./js/customClasses.js"></script>
+	<script src="./js/extensions.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+	<script src="./js/main.js"></script>
+	<script type="text/javascript">
+		if ('serviceWorker' in navigator) {
+			window.addEventListener('load', function() {
+				navigator.serviceWorker.register('./service-worker.js');
+			});
+		}
+	</script>
+</body>
+</html>

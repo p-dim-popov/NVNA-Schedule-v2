@@ -1,13 +1,23 @@
 body{
     background-color: #E1E2E1;
+    width: 100%;
+}
+body > div.afterBody{
+align-items: center;
+    box-sizing: border-box;
+    width: 90%;
+    display: flex;
+    justify-content: flex-start;
+    align-content: center;
+    flex-direction: column;
 }
 
 form{
     background-color: #b3e5fc;
-    width: 100%;
+    width: 98%;
     padding: 10px;
     display: block;
-    align-content: center;
+    align-self: stretch;
 }
 
 .containerForRadios{
@@ -48,7 +58,7 @@ label{
 }
 
 ul, li, ol{
-    width: 100%;
+    width: inherit;
 }
 
 ul > li{
@@ -66,4 +76,20 @@ span.dayOfWeek{
 
 ol {
     background-color: #82b3c9;
+}
+
+@media all and (display-mode: standalone) {
+    footer {
+        display: none;
+    }
+}
+
+footer {
+    text-align: center;
+    background-color: #82b3c9;
+    padding: 10px 5px;
+    border-radius: 3px;
+    border: white solid 0.5px;
+    display: block;
+    align-self: stretch;
 }

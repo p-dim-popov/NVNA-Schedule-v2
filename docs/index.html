@@ -1,27 +1,36 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="bg">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-title" content="Schedule NVNA">
+    <meta name="description" content="A simple schedule app">
+    <meta name="theme-color" content="#b3e5fc"/>
 
     <title>NVNA Schedule v2.0</title>
 
     <base href=".">
+    <link rel="manifest" href="./manifest.json">
+    <link rel="apple-touch-icon" href="./images/icons/icon-152x152.png">
+
     <link rel="stylesheet" type="text/css" href="./css/stylesheet.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 </head>
 <body>
+<div class="afterBody">
     <form class="mainForm">
         <label for="code">Код</label>
         <input type="text" placeholder="Въведи класно/код/зала" id="code">
 
         <label for="week">Седмица/дата</label>
-        <input type="text" placeholder="Въведи дата" id="week" checked="checked">
+        <input type="text" placeholder="Въведи дата" id="week">
 
         <div class="containerForRadios">
             <div class="radioSearchingFor">
                 <label for="group">За класно</label>
-                <input type="radio" id="group" name="searchingFor">
+                <input type="radio" id="group" name="searchingFor" checked>
             </div>
 
             <div class="radioSearchingFor">
@@ -35,26 +44,47 @@
             </div>
         </div>
         <div class="containerPeriod">
-			<label for="period">Изберете за колко време: </label>
-        	<select id="period">
-            <option value="day" selected="selected">ден</option>
-            <option value="week">седмица</option>
-            <option id="periodWeeks" value="weeks">седмици</option>
-        </select>
+            <label for="period">Изберете за колко време: </label>
+            <select id="period">
+                <option value="day" selected="selected">ден</option>
+                <option value="week">седмица</option>
+                <option id="periodWeeks" value="weeks">седмици</option>
+            </select>
 
         </div>
         <label for="periodNumber"></label>
         <input type="number" id="periodNumber" placeholder="въведи колко (с цифри)" hidden="">
         <button id="submitBtn">Покажи</button>
     </form>
-<div id="content">
+    <div id="content">
 
+    </div>
+    <button id="downloadBtn" hidden>Изтегли разписание</button>
+
+	<footer hidden>
+		<span>Ако все още не сте инсталирали това приложение, може да го направите от тук: </span>
+		<button>Инсталирай</button>
+	</footer>
 </div>
-<button id="downloadBtn" hidden>Изтегли разписание</button>
+
+
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.7.3/handlebars.min.js"></script>
 <script src="./js/customClasses.js"></script>
 <script src="./js/extensions.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 <script src="./js/main.js"></script>
+<script type="text/javascript">
+    if ('serviceWorker' in navigator)
+    {
+        window.addEventListener('load', () => {
+            navigator.serviceWorker.register('./service-worker.js')
+                .then((reg) => {
+                    console.log('Service worker registered.', reg);
+                });
+        });
+    }
+</script>
+<script src="./js/install.js"></script>
 </body>
 </html>

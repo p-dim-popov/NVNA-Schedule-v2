@@ -1,6 +1,7 @@
 (function main() {
     const webScrapper = `https://web--scrapper.herokuapp.com/webscrapper`;
-    fetch(`${webScrapper}?url=${encodeURIComponent('http://nvna.eu/schedule/?group=5&queryType=room&Week=10')}`).then();
+    if (!(location.hostname === "localhost" || location.hostname === "127.0.0.1"))
+        fetch(`${webScrapper}?url=${encodeURIComponent('http://nvna.eu/schedule/?group=5&queryType=room&Week=10')}`).then();
     const submitBtn = document.getElementById('submitBtn');
     const [codeFromInput, dateFromInput, groupFromInput, lecturerFromInput, roomFromInput] = document.getElementsByTagName('input');
     const contentDiv = document.getElementById('content');
@@ -22,7 +23,9 @@
     {
         let tsvContent = bulkData
             .map(d => d.classes
-                .map(c => [d.date, ...c.toArray().map(x => x.trim())]
+                .map(c => [d.date, ...c.toArray()
+                    .map(x => x
+                        .trim())]
                     .join('\t'))
                 .join('\n'))
             .join('\n')
@@ -33,20 +36,21 @@
                 r.split('\t').length > 1 &&
                 r.split('\t')[1].trim())
             .join('\n');
-        let filename = prompt('Въведи име на файл', `${dateFromInput.value.replace(/\//g,'-')}.tsv` || `${dateFromInput.value}.tsv`);
+        let filename = prompt('Въведи име на файл', `${dateFromInput.value.replace(/\//g, '-')}.tsv` || `${dateFromInput.value}.tsv`);
         if (filename)
         {
             let file = new Blob([tsvContent], {type: "data:application/octet-stream"});
             if (window.navigator.msSaveOrOpenBlob) // IE10+
                 window.navigator.msSaveOrOpenBlob(file, filename);
-            else { // Others
+            else
+            { // Others
                 let a = document.createElement("a"),
                     url = URL.createObjectURL(file);
                 a.href = url;
                 a.download = filename;
                 document.body.appendChild(a);
                 a.click();
-                setTimeout(function() {
+                setTimeout(function () {
                     document.body.removeChild(a);
                     window.URL.revokeObjectURL(url);
                 }, 0);
@@ -79,7 +83,8 @@
         let weekValue = new Date(dateFromInput.value).getWeek();
         let nvnaUrl = `http://nvna.eu/schedule/?group=${codeFromInput.value}&queryType=${searchingFor}&Week=${weekValue}`;
         let url = `${webScrapper}?url=${encodeURIComponent(nvnaUrl)}`;
-        // url = '../testData.json'; //TODO: uncomment for working locally
+        if (location.hostname === "localhost" || location.hostname === "127.0.0.1")
+            url = '../testData.json'; //TODO: uncomment for working locally
         let data;
         try
         {
@@ -128,12 +133,12 @@
             contentDiv.innerHTML = '';
             let dataArr = responseArr.map(o => getDataArray(o));
             dataArr = dataArr.map(d => transformArrayToClassClass(normalizeData(d)));
-            bulkData = dataArr.reduce((acc, cur) => [...acc, ...cur] , []);
+            bulkData = dataArr.reduce((acc, cur) => [...acc, ...cur], []);
             dataArr = dataArr.map(d => createClassesForWeek(d));
             dataArr.forEach(d => contentDiv.appendChild(d))
         }
-
-        downloadBtn.hidden = false;
+        if (contentDiv.innerHTML.trim())
+            downloadBtn.hidden = false;
     }
 
     function showOnlyRequestedDay(requestedDate, weekDiv)
