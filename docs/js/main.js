@@ -176,8 +176,9 @@ async function main() {
     function createClassesForWeek(classesForWeekByDay) {
         let weekDiv = document.createElement('div');
         weekDiv.innerHTML = weekTemplate({days: classesForWeekByDay});
-        const listItems = weekDiv.querySelectorAll('ol > a');
+        const listItems = weekDiv.querySelectorAll('ol > li');
 
+        debugger
         [...listItems]
             .forEach(li => li.textContent.trim() !== ""
                 ? li.addEventListener('click', toggleInfoHandler)
@@ -216,8 +217,10 @@ async function main() {
 
     function toggleInfoHandler(e) {
         if (!e.target) return;
-        if (!e.target.classList.contains("subject")) return;
-        e.target.firstElementChild.classList.toggle("d-none");
+        let subject = e.target;
+        if (e.target.tagName === "SMALL" || e.target.tagName === "H6") subject = e.target.parentNode;
+        if (!subject.classList.contains("subject")) return;
+        [...subject.children].pop().classList.toggle("d-none");
     }
 
     function changePeriodHandler(e) {
