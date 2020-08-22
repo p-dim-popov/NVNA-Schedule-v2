@@ -1,15 +1,15 @@
 {{#each days}}
-    <ol>
-        <span class="dayOfWeek">{{this.day}}, {{this.date}}</span>
-        {{#each this.classes}}
-            <li class="subject">
+    <ol class="list-group bg-primary p-3 my-3">
+        <span class="bg-light my-1 border rounded p-3">{{this.day}}, {{this.date}}</span>
+        {{#each this.classes}} 
+            <a class="list-group-item bg-light list-group-item-action subject">
                 {{this.name}}
-                <ul class="info">
-                    <li>{{this.time}}</li>
-                    <li>{{this.groups}}</li>
-                    <li>{{this.lecturer}}</li>
+                <ul class="list-group d-none">
+                    <li class="list-group-item">{{this.time}}</li>
+                    <li class="list-group-item">{{this.groups}}</li>
+                    <li class="list-group-item">{{this.lecturer}}</li>
                 </ul>
-            </li>
+            </a>
         {{/each}}
     </ol>
 {{/each}}

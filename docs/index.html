@@ -15,68 +15,101 @@
     <link rel="manifest" href="./manifest.json">
     <link rel="apple-touch-icon" href="./images/icons/icon-152x152.png">
 
+    <!--    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"-->
+    <!--          integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">-->
+    <link rel="stylesheet" href="../node_modules/bootstrap/dist/css/bootstrap.css">
     <link rel="stylesheet" type="text/css" href="./css/stylesheet.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 </head>
 <body>
-<div class="afterBody">
-    <form class="mainForm">
-        <label for="code">Код</label>
-        <input type="text" placeholder="Въведи класно/код/зала" id="code">
+<div class="container p-1">
+    <div class="row">
+        <form class="mainForm col bg-light border rounded">
+            <div class="container">
+                <div class="row my-3">
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" id="code-label">Код</span>
+                        </div>
+                        <input type="text" id="code" class="form-control" placeholder="Въведи класно/код/зала"
+                               aria-label="Въведи класно/код/зала" aria-describedby="code-label">
+                    </div>
 
-        <label for="week">Седмица/дата</label>
-        <input type="text" placeholder="Въведи дата" id="week">
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" id="week-label">Седмица/дата</span>
+                        </div>
+                        <input type="text" id="week" class="form-control" placeholder="Въведи дата"
+                               aria-label="Въведи класно/код/зала" aria-describedby="week-label">
+                    </div>
+                </div>
 
-        <div class="containerForRadios">
-            <div class="radioSearchingFor">
-                <label for="group">За класно</label>
-                <input type="radio" id="group" name="searchingFor" checked>
+                <div class="row">
+                    <div class="col"></div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="radioSearchingFor" id="group" value="group"
+                               checked>
+                        <label class="form-check-label" for="group">За класно</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="radioSearchingFor" id="lecturer"
+                               value="lecturer">
+                        <label class="form-check-label" for="lecturer">За преподавател</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="radioSearchingFor" id="room" value="room">
+                        <label class="form-check-label" for="room">За зала</label>
+                    </div>
+                </div>
+
+                <div class="row input-group mb-3">
+                    <div class="col-auto input-group-prepend">
+                        <label class="input-group-text" for="period">Изберете за колко време: </label>
+                    </div>
+                    <select class="col custom-select" id="period">
+                        <option value="day" selected>ден</option>
+                        <option value="week">седмица</option>
+                        <option value="weeks">седмици</option>
+                    </select>
+                    <div class="col input-group-append">
+                        <input class="form-control" type="number" id="weeks" placeholder="въведи колко (с цифри)"
+                               hidden="">
+                    </div>
+                </div>
+
+                <button id="submitBtn" class="row btn btn-primary m-2">Покажи</button>
             </div>
-
-            <div class="radioSearchingFor">
-                <label for="lecturer">За преподавател</label>
-                <input type="radio" id="lecturer" name="searchingFor">
-            </div>
-
-            <div class="radioSearchingFor">
-                <label for="room">За зала</label>
-                <input type="radio" id="room" name="searchingFor">
-            </div>
-        </div>
-        <div class="containerPeriod">
-            <label for="period">Изберете за колко време: </label>
-            <select id="period">
-                <option value="day" selected="selected">ден</option>
-                <option value="week">седмица</option>
-                <option id="periodWeeks" value="weeks">седмици</option>
-            </select>
-
-        </div>
-        <label for="periodNumber"></label>
-        <input type="number" id="periodNumber" placeholder="въведи колко (с цифри)" hidden="">
-        <button id="submitBtn">Покажи</button>
-    </form>
-    <div id="content">
-
+        </form>
     </div>
-    <button id="downloadBtn" hidden>Изтегли разписание</button>
 
-	<footer hidden>
-		<span>Ако все още не сте инсталирали това приложение, може да го направите от тук: </span>
-		<button>Инсталирай</button>
-	</footer>
+    <div class="row">
+        <div id="content" class="container">
+
+        </div>
+    </div>
+    <button id="downloadBtn" class="row btn btn-primary" hidden>Изтегли разписание</button>
+
+    <footer class="row bg-light border rounded m-3 p-3" hidden>
+        <div class="col"></div>
+        <div class="col-auto">Ако все още не сте инсталирали това приложение, може да го направите от тук:</div>
+        <button class="col-auto btn btn-primary">Инсталирай</button>
+        <div class="col"></div>
+    </footer>
 </div>
 
 
-
+<!--<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"-->
+<!--        integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV"-->
+<!--        crossorigin="anonymous"></script>-->
+<script src="../node_modules/jquery/dist/jquery.js"></script>
+<script src="../node_modules/bootstrap/dist/js/bootstrap.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.7.3/handlebars.min.js"></script>
 <script src="./js/customClasses.js"></script>
 <script src="./js/extensions.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 <script src="./js/main.js"></script>
 <script type="text/javascript">
-    if ('serviceWorker' in navigator)
-    {
+    if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
             navigator.serviceWorker.register('./service-worker.js')
                 .then((reg) => {

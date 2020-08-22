@@ -12,7 +12,9 @@
   "author": "",
   "license": "MIT",
   "dependencies": {
+    "bootstrap": "^4.5.2",
     "flatpickr": "^4.6.3",
-    "handlebars": "^4.7.3"
+    "handlebars": "^4.7.3",
+    "jquery": "^3.5.1"
   }
 }

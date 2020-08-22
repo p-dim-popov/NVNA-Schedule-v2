@@ -1,4 +1,6 @@
-(function main() {
+main();
+
+async function main() {
     const webScrapper = `https://web--scrapper.herokuapp.com/webscrapper`;
     if (!(location.hostname === "localhost" || location.hostname === "127.0.0.1"))
         fetch(`${webScrapper}?url=${encodeURIComponent('http://nvna.eu/schedule/?group=5&queryType=room&Week=10')}`).then();
@@ -11,16 +13,14 @@
     let bulkData = [];
     flatpickr(dateFromInput, {});
 
-    let weekTemplate;
-    fetch('./templates/weekTemplate.hbs')
-        .then(r => r.text())
-        .then(d => weekTemplate = Handlebars.compile(d));
+    const weekTemplateResponse = await fetch('./templates/weekTemplate.hbs');
+    const weekTemplateContent = await weekTemplateResponse.text();
+    let weekTemplate = Handlebars.compile(weekTemplateContent);
 
     submitBtn.addEventListener('click', submitHandler);
     periodOption.addEventListener('change', changePeriodHandler);
 
-    function downloadBtnHandler()
-    {
+    function downloadBtnHandler() {
         let tsvContent = bulkData
             .map(d => d.classes
                 .map(c => [d.date, ...c.toArray()
@@ -37,13 +37,11 @@
                 r.split('\t')[1].trim())
             .join('\n');
         let filename = prompt('Въведи име на файл', `${dateFromInput.value.replace(/\//g, '-')}.tsv` || `${dateFromInput.value}.tsv`);
-        if (filename)
-        {
+        if (filename) {
             let file = new Blob([tsvContent], {type: "data:application/octet-stream"});
             if (window.navigator.msSaveOrOpenBlob) // IE10+
                 window.navigator.msSaveOrOpenBlob(file, filename);
-            else
-            { // Others
+            else { // Others
                 let a = document.createElement("a"),
                     url = URL.createObjectURL(file);
                 a.href = url;
@@ -60,16 +58,13 @@
 
     downloadBtn.addEventListener('click', downloadBtnHandler);
 
-    async function submitHandler(e)
-    {
+    async function submitHandler(e) {
         e.preventDefault();
-        if (!(groupFromInput.checked || lecturerFromInput.checked || roomFromInput.checked))
-        {
+        if (!(groupFromInput.checked || lecturerFromInput.checked || roomFromInput.checked)) {
             alert("Избери за к'во търсиш, де!");
             return;
         }
-        if (!dateFromInput.value)
-        {
+        if (!dateFromInput.value) {
             const currentDate = new Date();
             dateFromInput.value = `${currentDate.getFullYear()}/${currentDate.getMonth() + 1}/${currentDate.getDate()}`;
         }
@@ -84,50 +79,37 @@
         let nvnaUrl = `http://nvna.eu/schedule/?group=${codeFromInput.value}&queryType=${searchingFor}&Week=${weekValue}`;
         let url = `${webScrapper}?url=${encodeURIComponent(nvnaUrl)}`;
         if (location.hostname === "localhost" || location.hostname === "127.0.0.1")
-            url = '../testData.json'; //TODO: uncomment for working locally
+            url = '../testData.json';
         let data;
-        try
-        {
+        try {
             let response = await fetch(url);
             data = getDataArray(await response.json());
-        }
-        catch (e)
-        {
+        } catch (e) {
             console.log(e);
-        }
-        finally
-        {
+        } finally {
             disableSubmitBtn(false);
         }
-        if (periodOption.value !== 'weeks')
-        {
+        if (periodOption.value !== 'weeks') {
             contentDiv.innerHTML = '';
             let requestedDate = new Date(dateFromInput.value);
             let weekDiv = createClassesForWeek(transformArrayToClassClass(normalizeData(data)));
             contentDiv.appendChild(weekDiv);
-            if (periodOption.value === 'day')
-            {
+            if (periodOption.value === 'day') {
                 showOnlyRequestedDay(requestedDate, weekDiv)
             }
             bulkData = transformArrayToClassClass(normalizeData(data));
-        }
-        else if (periodOption.value === 'weeks')
-        {
+        } else if (periodOption.value === 'weeks') {
             const requestedNumberOfWeeks = periodNumberRef.value;
             let urls = [];
             let responseArr;
-            try
-            {
-                for (let i = 0; i < requestedNumberOfWeeks; i++)
-                {
+            try {
+                for (let i = 0; i < requestedNumberOfWeeks; i++) {
                     nvnaUrl = `http://nvna.eu/schedule/?group=${codeFromInput.value}&queryType=${searchingFor}&Week=${+weekValue + i}`;
                     urls.push(fetch(`${webScrapper}?url=${encodeURIComponent(nvnaUrl)}`))
                 }
                 responseArr = await Promise.all(urls);
                 responseArr = await Promise.all(responseArr.map(y => y.json()));
-            }
-            catch (e)
-            {
+            } catch (e) {
             }
 
             contentDiv.innerHTML = '';
@@ -141,8 +123,7 @@
             downloadBtn.hidden = false;
     }
 
-    function showOnlyRequestedDay(requestedDate, weekDiv)
-    {
+    function showOnlyRequestedDay(requestedDate, weekDiv) {
         [...weekDiv.children].forEach(el => {
             const curDate = new Date(el.firstElementChild.textContent.split(', ')[1]);
             const a = `${curDate.getFullYear()}/${curDate.getMonth() + 1}/${curDate.getDate()}`;
@@ -152,21 +133,18 @@
         })
     }
 
-    function normalizeData(_data)
-    {
-        const daysOfTheWeekBg = ['Понеделник', 'Вторник', 'Сряда', 'Четвъртък', 'Петък', 'Събота', 'Неделя'];
+    function normalizeData(_data) {
+        const daysOfTheWeek = {
+            bg: ['Понеделник', 'Вторник', 'Сряда', 'Четвъртък', 'Петък', 'Събота', 'Неделя']
+        };
         return _data
             .reduce((acc, cur, i, arr) => {
                 let day = cur[0].split(', ');
-                if (day && day[1])
-                {
-                    if (daysOfTheWeekBg.includes(day[0]))
-                    {
+                if (day && day[1]) {
+                    if (daysOfTheWeek.bg.includes(day[0])) {
                         let dayObj = {day: day[0], date: day[1], classes: []};
-                        if (arr[i + 1][0] !== 'Няма занятия')
-                        {
-                            for (let j = 0; j < 13; j++)
-                            {
+                        if (arr[i + 1][0] !== 'Няма занятия') {
+                            for (let j = 0; j < 13; j++) {
                                 dayObj.classes.push(arr[i + j + 1])
                             }
                         }
@@ -177,18 +155,15 @@
             }, []);
     }
 
-    function transformArrayToClassClass(classesForWeekByDay)
-    {
+    function transformArrayToClassClass(classesForWeekByDay) {
         return classesForWeekByDay
             .map(it => {
                 it.classes = it.classes
                     .map((c, i) => {
                         if (c instanceof Class) return c;
                         let thisClass = new Class(c);
-                        if (thisClass.classPeriod)
-                        {
-                            for (let j = 1; j < thisClass.classPeriod; j++)
-                            {
+                        if (thisClass.classPeriod) {
+                            for (let j = 1; j < thisClass.classPeriod; j++) {
                                 it.classes[i + j] = thisClass
                             }
                         }
@@ -198,18 +173,19 @@
             });
     }
 
-    function createClassesForWeek(classesForWeekByDay)
-    {
+    function createClassesForWeek(classesForWeekByDay) {
         let weekDiv = document.createElement('div');
-        weekDiv.classList.add('weekDiv');
         weekDiv.innerHTML = weekTemplate({days: classesForWeekByDay});
-        weekDiv.querySelectorAll('li.subject')
-            .forEach(li => li.textContent ? li.addEventListener('click', toggleInfoHandler) : null);
+        const listItems = weekDiv.querySelectorAll('ol > a');
+
+        [...listItems]
+            .forEach(li => li.textContent.trim() !== ""
+                ? li.addEventListener('click', toggleInfoHandler)
+                : null);
         return weekDiv;
     }
 
-    function getDataArray(data)
-    {
+    function getDataArray(data) {
         let table = document.createElement('table');
         table.innerHTML = data.contents.match(/<table>[.\s\S]*?<\/table>/uimg)[0];
         return [...table.getElementsByTagName("tbody")[0].children]
@@ -217,8 +193,8 @@
                 if (tr.firstElementChild &&
                     tr.firstElementChild.textContent.match(/\d{1,2}/) &&
                     tr.firstElementChild.nextElementSibling &&
-                    tr.firstElementChild.nextElementSibling.hasAttribute('rowspan'))
-                {
+                    tr.firstElementChild.nextElementSibling.hasAttribute('rowspan')
+                ) {
                     let classPeriod = document.createElement('span');
                     classPeriod.textContent = tr.firstElementChild.nextElementSibling.rowSpan;
                     tr.appendChild(classPeriod);
@@ -228,10 +204,8 @@
             })
     }
 
-    function disableSubmitBtn(shouldDisable)
-    {
-        if (shouldDisable)
-        {
+    function disableSubmitBtn(shouldDisable) {
+        if (shouldDisable) {
             submitBtn.disabled = true;
             submitBtn.textContent = 'Зарежда се';
             return;
@@ -240,26 +214,15 @@
         submitBtn.textContent = 'Покажи';
     }
 
-    function toggleInfoHandler(e)
-    {
-        if (!e.target.textContent.trim()) return;
-        try
-        {
-            let ul = e.target.firstElementChild;
-            if (ul.style.display === 'block')
-                ul.style.display = 'none';
-            else
-                ul.style.display = 'block';
-        }
-        catch (e)
-        {
-        }
+    function toggleInfoHandler(e) {
+        if (!e.target) return;
+        if (!e.target.classList.contains("subject")) return;
+        e.target.firstElementChild.classList.toggle("d-none");
     }
 
-    function changePeriodHandler(e)
-    {
+    function changePeriodHandler(e) {
         if (!e.target) return;
-        const weeks = document.getElementById("periodWeeks").value;
-        periodNumberRef.hidden = e.target.value !== weeks;
+        document.getElementById("weeks").hidden =
+            document.getElementById("period").value !== "weeks"
     }
-})();
+}
