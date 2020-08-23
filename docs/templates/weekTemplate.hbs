@@ -1,14 +1,14 @@
 {{#each days}}
     <ol class="list-group bg-primary p-3 my-3">
         <span class="bg-light my-1 border rounded p-3">{{this.day}}, {{this.date}}</span>
-        {{#each this.classes}}
+        {{#each this.lessons}}
             <li class="list-group-item bg-light list-group-item-action subject">
-                <small>{{this.time}}</small>
+                <small>часове ({{this.length}}): {{this.time}}</small>
                 <h6>{{this.name}}</h6>
                 <ul class="list-group d-none">
-                    <li class="list-group-item">{{this.time}}</li>
-                    <li class="list-group-item">{{this.groups}}</li>
-                    <li class="list-group-item">{{this.lecturer}}</li>
+                    {{#each this.variousData}}
+                        <li class="list-group-item">{{this}}</li>
+                    {{/each}}
                 </ul>
             </li>
         {{/each}}

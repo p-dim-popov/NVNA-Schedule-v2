@@ -41,42 +41,35 @@
                         <input type="text" id="week" class="form-control" placeholder="Въведи дата"
                                aria-label="Въведи класно/код/зала" aria-describedby="week-label">
                     </div>
-                </div>
 
-                <div class="row">
-                    <div class="col"></div>
-                    <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio" name="radioSearchingFor" id="group" value="group"
-                               checked>
-                        <label class="form-check-label" for="group">За класно</label>
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <label class="input-group-text" for="searching-for">За</label>
+                        </div>
+                        <select class="custom-select" id="searching-for">
+                            <option value="group" selected>класно</option>
+                            <option value="lecturer">преподавател</option>
+                            <option value="room">зала</option>
+                        </select>
                     </div>
-                    <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio" name="radioSearchingFor" id="lecturer"
-                               value="lecturer">
-                        <label class="form-check-label" for="lecturer">За преподавател</label>
-                    </div>
-                    <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio" name="radioSearchingFor" id="room" value="room">
-                        <label class="form-check-label" for="room">За зала</label>
-                    </div>
-                </div>
 
-                <div class="row input-group mb-3">
-                    <div class="col-auto input-group-prepend">
-                        <label class="input-group-text" for="period">Изберете за колко време: </label>
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <label class="input-group-text" for="period">Изберете за колко време: </label>
+                        </div>
+                        <select class="custom-select" id="period">
+                            <option value="day" selected>ден</option>
+                            <option value="week">седмица</option>
+                            <option value="weeks">седмици</option>
+                        </select>
+                        <div class="input-group-append">
+                            <input class="form-control" type="number" id="weeks" placeholder="въведи колко (с цифри)"
+                                   hidden="">
+                        </div>
                     </div>
-                    <select class="col custom-select" id="period">
-                        <option value="day" selected>ден</option>
-                        <option value="week">седмица</option>
-                        <option value="weeks">седмици</option>
-                    </select>
-                    <div class="col input-group-append">
-                        <input class="form-control" type="number" id="weeks" placeholder="въведи колко (с цифри)"
-                               hidden="">
-                    </div>
-                </div>
 
-                <button id="submitBtn" class="row btn btn-primary m-2">Покажи</button>
+                    <button id="submit-btn" class="btn btn-primary m-2">Покажи</button>
+                </div>
             </div>
         </form>
     </div>
@@ -88,7 +81,7 @@
     </div>
     <div class="row my-3">
         <div class="col"></div>
-        <button id="downloadBtn" class="col-auto btn btn-primary" hidden>Изтегли разписание</button>
+        <button id="download-btn" class="col-auto btn btn-primary" hidden>Изтегли разписание</button>
         <div class="col"></div>
     </div>
 
@@ -107,7 +100,7 @@
         integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV"
         crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.7.3/handlebars.min.js"></script>
-<script src="./js/customClasses.js"></script>
+<script src="./js/lesson.js"></script>
 <script src="./js/extensions.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 <script src="./js/main.js"></script>

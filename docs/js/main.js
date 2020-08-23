@@ -2,16 +2,17 @@ main();
 
 async function main() {
     const webScrapper = `https://web--scrapper.herokuapp.com/webscrapper`;
-    if (!(location.hostname === "localhost" || location.hostname === "127.0.0.1"))
-        fetch(`${webScrapper}?url=${encodeURIComponent('http://nvna.eu/schedule/?group=5&queryType=room&Week=10')}`).then();
-    const submitBtn = document.getElementById('submitBtn');
-    const [codeFromInput, dateFromInput, groupFromInput, lecturerFromInput, roomFromInput] = document.getElementsByTagName('input');
+    const submitBtn = document.getElementById('submit-btn');
+    const [codeFromInput, dateFromInput] = document.getElementsByTagName('input');
+    const searchingFor = document.getElementById("searching-for");
     const contentDiv = document.getElementById('content');
     const periodOption = document.getElementById('period');
-    const periodNumberRef = document.getElementById("periodNumber");
-    const downloadBtn = document.getElementById('downloadBtn');
+    const periodNumberElement = document.getElementById("period");
+    const downloadBtn = document.getElementById('download-btn');
     let bulkData = [];
+
     flatpickr(dateFromInput, {});
+    dateFromInput.value = `${new Date().getFullYear()}-${new Date().getMonth() + 1}-${new Date().getDate()}`;
 
     const weekTemplateResponse = await fetch('./templates/weekTemplate.hbs');
     const weekTemplateContent = await weekTemplateResponse.text();
@@ -21,22 +22,8 @@ async function main() {
     periodOption.addEventListener('change', changePeriodHandler);
 
     function downloadBtnHandler() {
-        let tsvContent = bulkData
-            .map(d => d.classes
-                .map(c => [d.date, ...c.toArray()
-                    .map(x => x
-                        .trim())]
-                    .join('\t'))
-                .join('\n'))
-            .join('\n')
-            .split('\n')
-            .filter((r, i, arr) =>
-                r.trim() &&
-                arr.indexOf(r) === i &&
-                r.split('\t').length > 1 &&
-                r.split('\t')[1].trim())
-            .join('\n');
-        let filename = prompt('Въведи име на файл', `${dateFromInput.value.replace(/\//g, '-')}.tsv` || `${dateFromInput.value}.tsv`);
+        let tsvContent = Lessons.tsv
+        let filename = prompt('Въведи име на файл', `${dateFromInput.value}.tsv` || `${dateFromInput.value}.tsv`);
         if (filename) {
             let file = new Blob([tsvContent], {type: "data:application/octet-stream"});
             if (window.navigator.msSaveOrOpenBlob) // IE10+
@@ -60,63 +47,59 @@ async function main() {
 
     async function submitHandler(e) {
         e.preventDefault();
-        if (!(groupFromInput.checked || lecturerFromInput.checked || roomFromInput.checked)) {
-            alert("Избери за к'во търсиш, де!");
-            return;
-        }
-        if (!dateFromInput.value) {
-            const currentDate = new Date();
-            dateFromInput.value = `${currentDate.getFullYear()}/${currentDate.getMonth() + 1}/${currentDate.getDate()}`;
+        if (!codeFromInput.value) {
+            alert("Няма посочен код на класно/преподавател/зала")
+            return
         }
 
         downloadBtn.hidden = true;
         disableSubmitBtn(true);
-        let searchingFor;
-        if (groupFromInput.checked) searchingFor = 'group';
-        else if (lecturerFromInput.checked) searchingFor = 'lecturer';
-        else if (roomFromInput.checked) searchingFor = 'room';
         let weekValue = new Date(dateFromInput.value).getWeek();
-        let nvnaUrl = `http://nvna.eu/schedule/?group=${codeFromInput.value}&queryType=${searchingFor}&Week=${weekValue}`;
+
+        let nvnaUrl = `http://nvna.eu/schedule/?group=${codeFromInput.value}&queryType=${searchingFor.selectedOptions[0].value}&Week=${weekValue}`;
         let url = `${webScrapper}?url=${encodeURIComponent(nvnaUrl)}`;
         if (location.hostname === "localhost" || location.hostname === "127.0.0.1")
             url = '../testData.json';
+
         let data;
         try {
             let response = await fetch(url);
-            data = getDataArray(await response.json());
+            data = await response.json();
         } catch (e) {
             console.log(e);
         } finally {
             disableSubmitBtn(false);
         }
+
         if (periodOption.value !== 'weeks') {
             contentDiv.innerHTML = '';
             let requestedDate = new Date(dateFromInput.value);
-            let weekDiv = createClassesForWeek(transformArrayToClassClass(normalizeData(data)));
+            let weekDiv = createLessonsForWeek(Lesson.getArrayFromNormalizedData(Lesson.normalizeData(data)));
             contentDiv.appendChild(weekDiv);
+debugger
             if (periodOption.value === 'day') {
                 showOnlyRequestedDay(requestedDate, weekDiv)
             }
-            bulkData = transformArrayToClassClass(normalizeData(data));
+
+            Lessons.listByDays = Lesson.getArrayFromNormalizedData(Lesson.normalizeData(data));
         } else if (periodOption.value === 'weeks') {
-            const requestedNumberOfWeeks = periodNumberRef.value;
             let urls = [];
+            for (let i = 0; i < periodNumberElement.value; i++) {
+                nvnaUrl = `http://nvna.eu/schedule/?group=${codeFromInput.value}&queryType=${searchingFor}&Week=${+weekValue + i}`;
+                urls.push(fetch(`${webScrapper}?url=${encodeURIComponent(nvnaUrl)}`))
+            }
+
             let responseArr;
             try {
-                for (let i = 0; i < requestedNumberOfWeeks; i++) {
-                    nvnaUrl = `http://nvna.eu/schedule/?group=${codeFromInput.value}&queryType=${searchingFor}&Week=${+weekValue + i}`;
-                    urls.push(fetch(`${webScrapper}?url=${encodeURIComponent(nvnaUrl)}`))
-                }
                 responseArr = await Promise.all(urls);
                 responseArr = await Promise.all(responseArr.map(y => y.json()));
             } catch (e) {
             }
 
             contentDiv.innerHTML = '';
-            let dataArr = responseArr.map(o => getDataArray(o));
-            dataArr = dataArr.map(d => transformArrayToClassClass(normalizeData(d)));
-            bulkData = dataArr.reduce((acc, cur) => [...acc, ...cur], []);
-            dataArr = dataArr.map(d => createClassesForWeek(d));
+            let dataArr = responseArr.map(d => Lesson.getArrayFromNormalizedData(Lesson.normalizeData(d)));
+            Lessons.listByDays = dataArr.reduce((acc, cur) => [...acc, ...cur], []);
+            dataArr = dataArr.map(d => createLessonsForWeek(d));
             dataArr.forEach(d => contentDiv.appendChild(d))
         }
         if (contentDiv.innerHTML.trim())
@@ -133,76 +116,13 @@ async function main() {
         })
     }
 
-    function normalizeData(_data) {
-        const daysOfTheWeek = {
-            bg: ['Понеделник', 'Вторник', 'Сряда', 'Четвъртък', 'Петък', 'Събота', 'Неделя']
-        };
-        return _data
-            .reduce((acc, cur, i, arr) => {
-                let day = cur[0].split(', ');
-                if (day && day[1]) {
-                    if (daysOfTheWeek.bg.includes(day[0])) {
-                        let dayObj = {day: day[0], date: day[1], classes: []};
-                        if (arr[i + 1][0] !== 'Няма занятия') {
-                            for (let j = 0; j < 13; j++) {
-                                dayObj.classes.push(arr[i + j + 1])
-                            }
-                        }
-                        acc.push(dayObj);
-                    }
-                }
-                return acc;
-            }, []);
-    }
-
-    function transformArrayToClassClass(classesForWeekByDay) {
-        return classesForWeekByDay
-            .map(it => {
-                it.classes = it.classes
-                    .map((c, i) => {
-                        if (c instanceof Class) return c;
-                        let thisClass = new Class(c);
-                        if (thisClass.classPeriod) {
-                            for (let j = 1; j < thisClass.classPeriod; j++) {
-                                it.classes[i + j] = thisClass
-                            }
-                        }
-                        return thisClass
-                    });
-                return it
-            });
-    }
-
-    function createClassesForWeek(classesForWeekByDay) {
+    function createLessonsForWeek(classesForWeekByDay) {
         let weekDiv = document.createElement('div');
         weekDiv.innerHTML = weekTemplate({days: classesForWeekByDay});
         const listItems = weekDiv.querySelectorAll('ol > li');
-
-        debugger
         [...listItems]
-            .forEach(li => li.textContent.trim() !== ""
-                ? li.addEventListener('click', toggleInfoHandler)
-                : null);
+            .forEach(li => li.addEventListener('click', toggleInfoHandler));
         return weekDiv;
-    }
-
-    function getDataArray(data) {
-        let table = document.createElement('table');
-        table.innerHTML = data.contents.match(/<table>[.\s\S]*?<\/table>/uimg)[0];
-        return [...table.getElementsByTagName("tbody")[0].children]
-            .map(tr => {
-                if (tr.firstElementChild &&
-                    tr.firstElementChild.textContent.match(/\d{1,2}/) &&
-                    tr.firstElementChild.nextElementSibling &&
-                    tr.firstElementChild.nextElementSibling.hasAttribute('rowspan')
-                ) {
-                    let classPeriod = document.createElement('span');
-                    classPeriod.textContent = tr.firstElementChild.nextElementSibling.rowSpan;
-                    tr.appendChild(classPeriod);
-                }
-                return [...tr.children]
-                    .map(it => it.innerHTML)
-            })
     }
 
     function disableSubmitBtn(shouldDisable) {
