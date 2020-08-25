@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="JavaScriptLibraryMappings">
+    <file url="PROJECT" libraries="{bootstrap, bootstrap-datepicker, hash-router, jquery-3.5.1, moment, moment.js, page, react-hash-router, tiny-date-picker}" />
+  </component>
+</project>

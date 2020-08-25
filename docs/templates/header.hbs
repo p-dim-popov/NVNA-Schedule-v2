@@ -1,0 +1,51 @@
+<div id="header" class="row">
+    <form class="mainForm col bg-light border rounded">
+        <div class="container">
+            <div class="row my-3">
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="code-label">Код</span>
+                    </div>
+                    <input type="text" id="code" name="code" class="form-control" placeholder="Въведи класно/код/зала"
+                           aria-label="Въведи класно/код/зала" aria-describedby="code-label">
+                </div>
+
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="date-label">Седмица/дата</span>
+                    </div>
+                    <input type="text" id="date" name="date" class="form-control" placeholder="Въведи дата"
+                           aria-label="Въведи дата" aria-describedby="date-label">
+                </div>
+
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <label class="input-group-text" for="searchingFor">За</label>
+                    </div>
+                    <select class="custom-select" id="searchingFor" name="searchingFor">
+                        <option value="group" selected>класно</option>
+                        <option value="lecturer">преподавател</option>
+                        <option value="room">зала</option>
+                    </select>
+                </div>
+
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <label class="input-group-text" for="period">Изберете за колко време: </label>
+                    </div>
+                    <select class="custom-select" id="period" name="period">
+                        <option value="day" selected>ден</option>
+                        <option value="week">седмица</option>
+                        <option value="weeks">седмици</option>
+                    </select>
+                    <div class="input-group-append">
+                        <input class="form-control" type="number" id="weeksCount" name="weeksCount" placeholder="въведи колко (с цифри)"
+                               hidden="">
+                    </div>
+                </div>
+
+                <input type="button" id="submitBtn" class="btn btn-primary m-2" value="Покажи"/>
+            </div>
+        </div>
+    </form>
+</div>

@@ -1,9 +1,10 @@
 class Lesson {
-    length;
+    span;
     time;
     name;
     period;
     variousData;
+    durationString;
 
     constructor(arr) {
         if (arr.length <= 1) return [];
@@ -11,9 +12,9 @@ class Lesson {
 
         this.period = +arr.pop();
         const firstLesson = +arr.shift();
-        this.length = [...Array(this.period).keys()]
+        this.span = [...Array(this.period).keys()]
             .reduce((acc, cur) => [...acc, cur + firstLesson], []);
-
+        this.durationString = this.span.join(",");
         [this.time, this.name, ...this.variousData] = arr;
     }
 
@@ -40,7 +41,7 @@ class Lesson {
             })
     }
 
-    static normalizeData(data) {
+    static getLessonWeek(data) {
         const weekDays = {
             bg: ['Понеделник', 'Вторник', 'Сряда', 'Четвъртък', 'Петък', 'Събота', 'Неделя']
         };
@@ -50,24 +51,31 @@ class Lesson {
                 const day = cur[0].split(', ');
                 if (day && day[1]) {
                     if (weekDays.bg.includes(day[0])) {
-                        const lessonDay = {day: day[0], date: day[1], lessons: []};
+                        const lessonDay = new LessonDay(day[0], day[1]);
                         if (arr[i + 1][0] !== 'Няма занятия') {
                             for (let j = 0; j < 13; j++) {
-                                const lesson = arr[i + j + 1].filter(el => !!el.trim());
-                                if (lesson.length > 1)
+                                const lesson = new Lesson(arr[i + j + 1].filter(el => !!el.trim()));
+                                if (lesson.span?.length > 1)
                                     lessonDay.lessons.push(lesson)
                             }
                         }
-                        acc.push(lessonDay);
+                        acc.days.push(lessonDay);
                     }
                 }
                 return acc;
-            }, []);
+            }, new LessonWeek());
     }
 
-    static getArrayFromNormalizedData(classesForWeekByDay) {
-        return classesForWeekByDay
-            .map(day => ({...day, lessons: day.lessons.reduce((acc, cur) => [...acc, new Lesson(cur)], [])}));
+    serialize(format){
+        switch (format.toLowerCase()) {
+            case "json":
+                return JSON.stringify(this);
+            case "tsv":
+                return [...this.time.split("-"), this.name, ...this.variousData]
+                    .join("\t")
+            default:
+                return this;
+        }
     }
 }
 
@@ -97,5 +105,46 @@ class Lessons {
                 r.split(separator).length > 1 &&
                 r.split(separator)[1].trim())
             .join('\n');
+    }
+}
+
+class LessonDay {
+    day;
+    date;
+    lessons = [];
+
+    constructor(day, date, ...lessons) {
+        this.day = day;
+        this.date = date;
+        this.lessons = lessons;
+    }
+
+    serialize(format){
+        switch (format.toLowerCase()) {
+            case "json":
+                return JSON.stringify(this);
+            case "tsv":
+                return this.lessons
+                    .map(l => [this.date, l.serialize(format)].join("\t"))
+                    .join("\n")
+            default:
+                return this;
+        }
+    }
+}
+
+class LessonWeek {
+    days = [];
+
+    constructor(...days) {
+        this.days = days;
+    }
+}
+
+class LessonWeeks {
+    list = [];
+
+    constructor(...lessonWeeks) {
+        this.list = lessonWeeks
     }
 }

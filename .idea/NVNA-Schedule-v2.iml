@@ -4,5 +4,14 @@
     <content url="file://$MODULE_DIR$" />
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="library" name="moment" level="application" />
+    <orderEntry type="library" name="page" level="application" />
+    <orderEntry type="library" name="bootstrap" level="application" />
+    <orderEntry type="library" name="jquery-3.5.1" level="application" />
+    <orderEntry type="library" name="react-hash-router" level="application" />
+    <orderEntry type="library" name="hash-router" level="application" />
+    <orderEntry type="library" name="bootstrap-datepicker" level="application" />
+    <orderEntry type="library" name="tiny-date-picker" level="application" />
+    <orderEntry type="library" name="moment.js" level="application" />
   </component>
 </module>
