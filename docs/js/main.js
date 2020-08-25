@@ -80,7 +80,7 @@
         document.getElementById("period")
             .addEventListener("change", (e) => {
                 if (!e.target) return;
-                document.getElementById("weeks").hidden =
+                document.getElementById("weeksCount").hidden =
                     document.getElementById("period").value !== "weeks"
             })
         if (!!postLoadAction)
