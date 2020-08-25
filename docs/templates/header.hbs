@@ -31,16 +31,21 @@
 
                 <div class="input-group mb-3">
                     <div class="input-group-prepend">
-                        <label class="input-group-text" for="period">Изберете за колко време: </label>
+                        <label class="input-group-text" for="period">Изберете период</label>
                     </div>
                     <select class="custom-select" id="period" name="period">
                         <option value="day" selected>ден</option>
                         <option value="week">седмица</option>
                         <option value="weeks">седмици</option>
                     </select>
+                    <div class="input-group-prepend">
+                        <label class="input-group-text" for="period">колко</label>
+                    </div>
+                    <div class="input-group-prepend">
+                        <label class="input-group-text" for="weeksCount">брой</label>
+                    </div>
                     <div class="input-group-append">
-                        <input class="form-control" type="number" id="weeksCount" name="weeksCount" placeholder="въведи колко (с цифри)"
-                               hidden="">
+                        <input class="form-control" type="number" id="weeksCount" name="weeksCount" placeholder="въведи колко (с цифри)" hidden>
                     </div>
                 </div>
 
