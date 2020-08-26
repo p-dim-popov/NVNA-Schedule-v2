@@ -16,10 +16,6 @@ class Lesson {
         [this.time, this.name, ...this.variousData] = arr;
     }
 
-    toArray() {
-        return [...this.time.split('-'), this.name, ...this.variousData];
-    }
-
     static _getDataArray(data) {
         let table = document.createElement('table');
         table.innerHTML = data.contents.match(/<table>[.\s\S]*?<\/table>/uimg)[0];
@@ -79,6 +75,10 @@ class Lesson {
 
 class LessonDay {
     constructor(day, date, ...lessons) {
+        this.day = "";
+        this.date = "";
+        this.lessons = [];
+
         this.day = day;
         this.date = date;
         this.lessons = lessons;
@@ -100,12 +100,16 @@ class LessonDay {
 
 class LessonWeek {
     constructor(...days) {
+        this.days = [];
+
         this.days = days;
     }
 }
 
 class LessonWeeks {
     constructor(...lessonWeeks) {
+        this.list = [];
+
         this.list = lessonWeeks
     }
 }
