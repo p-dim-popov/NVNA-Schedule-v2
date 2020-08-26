@@ -66,25 +66,34 @@
                 const query = {
                     searchingFor: document.getElementById("searching-for"),
                     code: document.getElementById("code"),
-                    date: document.getElementById("date"),
                     period: document.getElementById("period"),
+                    date: document.getElementById("date"),
                     weeksCount: document.getElementById("weeks-count")
                 }
 
-                if (!query.date.value) query.date.value = moment().format("YYYY-MM-DD");
-                if (!query.period.value) query.period.value = "day";
+                document.getElementById("submit-btn").disabled = true;
+                document.getElementById("submit-btn").value = "Зарежда се..."
 
-                let url = "";
+                if (!query.period.value) query.period.value = "day";
+                if (!query.date.value) query.date.value = moment().format("YYYY-MM-DD");
+
+                let hash = "";
                 switch (query.period.value) {
                     case "day":
                     case "week":
-                        url = `#/${query.searchingFor.value}/${query.code.value}/${query.date.value}/${query.period.value}`;
+                        hash = `#/${query.searchingFor.value}/${query.code.value}/${query.period.value}/${query.date.value}`;
                         break;
                     case "weeks":
-                        url = `#/${query.searchingFor.value}/${query.code.value}/${query.date.value}/${query.period.value}/${query.weeksCount.value}`;
+                        hash = `#/${query.searchingFor.value}/${query.code.value}/${query.period.value}/${query.date.value}/${query.weeksCount.value}`;
                         break;
                 }
-                Router.navigate(url);
+
+                if (window.location.hash === hash) {
+                    document.getElementById("submit-btn").disabled = false;
+                    document.getElementById("submit-btn").value = "Покажи"
+                }
+
+                Router.navigate(hash);
             })
 
         document.getElementById("period")
@@ -241,22 +250,22 @@
             })
         },
         {
-            path: "#/:searchingFor/:code", // no date so current day is assumed
+            path: "#/:searchingFor/:code", // no period so day is assumed
             before: fetchSchedule,
             on: applyCommonThen(showSchedule)
         },
         {
-            path: "#/:searchingFor/:code/:date", // default period is day
+            path: "#/:searchingFor/:code/:period", // no date so current date is assumed, options for period = [ "day", "week", "weeks" ]
             before: fetchSchedule,
             on: applyCommonThen(showSchedule)
         },
         {
-            path: "#/:searchingFor/:code/:date/:period", // options for period = [ "day", "week", "weeks" ]
+            path: "#/:searchingFor/:code/:period/:date",
             before: fetchSchedule,
             on: applyCommonThen(showSchedule)
         },
         {
-            path: "#/:searchingFor/:code/:date/:period/:weeksCount", // if period is "weeks" then weekCount should be the number (1 is assumed default)
+            path: "#/:searchingFor/:code/:period/:date/:weeksCount", // if period is "weeks" then weekCount should be the count (1 is assumed default)
             before: fetchSchedule,
             on: applyCommonThen(showSchedule)
         }
