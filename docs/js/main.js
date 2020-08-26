@@ -50,7 +50,10 @@
     async function postLoadActions(postLoadAction) {
         flatpickr(document.getElementById("date"), {
             dateFormat: "Y-m-d",
-            defaultDate: "today"
+            defaultDate: "today",
+            altFormat: "Y M d, D",
+            altInput: true,
+            disableMobile: true
         });
 
         document.getElementById("submit-btn")
