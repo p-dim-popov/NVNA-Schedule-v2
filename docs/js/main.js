@@ -50,11 +50,16 @@
     async function postLoadActions(postLoadAction) {
         flatpickr(document.getElementById("date"), {
             dateFormat: "Y-m-d",
-            defaultDate: "today",
-            altFormat: "Y M d, D",
+            defaultDate: this.params.date.format("YYYY-MM-DD") || "today",
+            altFormat: "D, d M Y",
             altInput: true,
             disableMobile: true
         });
+
+        document.getElementById("code").value = this.params.code;
+        document.getElementById("searching-for").value = this.params.searchingFor;
+        document.getElementById("period").value = this.params.period;
+        document.getElementById("weeks-count").value = this.params.weeksCount;
 
         document.getElementById("submit-btn")
             .addEventListener("click", () => {
@@ -88,6 +93,7 @@
                 document.getElementById("weeks-count").hidden =
                     document.getElementById("period").value !== "weeks"
             })
+
         if (!!postLoadAction)
             postLoadAction.call(this)
     }
@@ -255,7 +261,7 @@
             on: applyCommonThen(showSchedule)
         }
     ]
-        .forEach(Router.add);
+        .forEach(r => Router.add(r));
 
     Router.init();
 })()
