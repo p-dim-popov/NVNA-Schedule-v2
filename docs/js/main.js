@@ -1,4 +1,4 @@
-body.onload = (async function () {
+document.body.onload = (async function () {
     const webScrapper = `https://web--scrapper.herokuapp.com/webscrapper`;
     const daysArray = []; // LessonDay[]
     const content = document.getElementById("content");
