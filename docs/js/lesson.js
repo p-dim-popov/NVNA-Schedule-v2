@@ -1,12 +1,11 @@
 class Lesson {
-    span;
-    time;
-    name;
-    period;
-    variousData;
-    durationString;
-
     constructor(arr) {
+        this.span = [];
+        this.time = "";
+        this.name = "";
+        this.period = "";
+        this.variousData = [];
+
         if (arr.length <= 1) return [];
         arr = arr.map(it => it.stripHTML().trim());
 
@@ -14,7 +13,6 @@ class Lesson {
         const firstLesson = +arr.shift();
         this.span = [...Array(this.period).keys()]
             .reduce((acc, cur) => [...acc, cur + firstLesson], []);
-        this.durationString = this.span.join(",");
         [this.time, this.name, ...this.variousData] = arr;
     }
 
@@ -79,40 +77,7 @@ class Lesson {
     }
 }
 
-class Lessons {
-    static listByDays = [];
-
-    constructor() {
-    }
-
-    static get tsv() {
-        return this._charSeparatedValues('\t');
-    }
-
-    static _charSeparatedValues(separator) {
-        return this.listByDays
-            .map(d => d.lessons
-                .map(c => [d.date, ...c.toArray()
-                    .map(x => x
-                        .trim())]
-                    .join(separator))
-                .join('\n'))
-            .join('\n')
-            .split('\n')
-            .filter((r, i, arr) =>
-                r.trim() &&
-                arr.indexOf(r) === i &&
-                r.split(separator).length > 1 &&
-                r.split(separator)[1].trim())
-            .join('\n');
-    }
-}
-
 class LessonDay {
-    day;
-    date;
-    lessons = [];
-
     constructor(day, date, ...lessons) {
         this.day = day;
         this.date = date;
@@ -134,16 +99,12 @@ class LessonDay {
 }
 
 class LessonWeek {
-    days = [];
-
     constructor(...days) {
         this.days = days;
     }
 }
 
 class LessonWeeks {
-    list = [];
-
     constructor(...lessonWeeks) {
         this.list = lessonWeeks
     }
