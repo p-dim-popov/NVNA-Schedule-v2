@@ -48,17 +48,19 @@
 
     // attaching events to header and footer and filling input fields if has queried data
     async function postLoadActions(postLoadAction) {
-        flatpickr(date, {});
-        date.value = moment().format("YYYY-MM-DD")
+        flatpickr(document.getElementById("date"), {
+            dateFormat: "Y-m-d",
+            defaultDate: "today"
+        });
 
-        document.getElementById("submitBtn")
+        document.getElementById("submit-btn")
             .addEventListener("click", () => {
                 const query = {
-                    searchingFor: document.getElementById("searchingFor"),
+                    searchingFor: document.getElementById("searching-for"),
                     code: document.getElementById("code"),
                     date: document.getElementById("date"),
                     period: document.getElementById("period"),
-                    weeksCount: document.getElementById("weeksCount")
+                    weeksCount: document.getElementById("weeks-count")
                 }
 
                 if (!query.date.value) query.date.value = moment().format("YYYY-MM-DD");
@@ -80,7 +82,7 @@
         document.getElementById("period")
             .addEventListener("change", (e) => {
                 if (!e.target) return;
-                document.getElementById("weeksCount").hidden =
+                document.getElementById("weeks-count").hidden =
                     document.getElementById("period").value !== "weeks"
             })
         if (!!postLoadAction)
@@ -198,7 +200,7 @@
                     }
                 ));
 
-            document.getElementById("downloadBtn")
+            document.getElementById("download-btn")
                 .addEventListener("click", () => {
                     let tsvContent = daysArray.map(d => d.serialize("tsv")).join("\n")
                     let filename = (prompt('Въведи име на файл', date.value) || date.value) + ".tsv";
