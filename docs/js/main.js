@@ -76,6 +76,11 @@ document.body.onload = (async function () {
                     weeksCount: document.getElementById("weeks-count")
                 }
 
+                if (!query.code.value) {
+                    showError("Няма въведен код");
+                    return;
+                }
+
                 document.getElementById("submit-btn").disabled = true;
                 document.getElementById("submit-btn").value = "Зарежда се..."
 
@@ -246,6 +251,12 @@ document.body.onload = (async function () {
                     }
                 })
         }
+    }
+
+    function showError(content) {
+        document.getElementById("error-info-box").classList.remove("d-none")
+        document.getElementById("error-info-box").textContent = content;
+        setTimeout(() => document.getElementById("error-info-box").classList.add("d-none"), 3000);
     }
 
     //////////////////////
