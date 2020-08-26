@@ -59,8 +59,13 @@
         document.getElementById("code").value = this.params.code || "";
         document.getElementById("searching-for").value = this.params.searchingFor || "group";
         document.getElementById("period").value = this.params.period || "day";
-        document.getElementById("weeks-count").value = this.params.weeksCount || 1;
 
+        if (!!this.params.weeksCount) {
+            document.getElementById("weeks-count").value = this.params.weeksCount;
+            document.getElementById("weeks-count").hidden = false;
+        }
+
+        // Form submit
         document.getElementById("submit-btn")
             .addEventListener("click", () => {
                 const query = {
@@ -96,6 +101,7 @@
                 Router.navigate(hash);
             })
 
+        // Period weeks handler
         document.getElementById("period")
             .addEventListener("change", (e) => {
                 if (!e.target) return;
