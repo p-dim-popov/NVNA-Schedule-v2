@@ -55,7 +55,7 @@ class Lesson {
                         if (arr[i + 1][0] !== 'Няма занятия') {
                             for (let j = 0; j < 13; j++) {
                                 const lesson = new Lesson(arr[i + j + 1].filter(el => !!el.trim()));
-                                if (lesson.span?.length > 1)
+                                if (lesson.span && lesson.span.length > 1)
                                     lessonDay.lessons.push(lesson)
                             }
                         }
