@@ -119,8 +119,9 @@
             return // redirect to error
         }
 
-        if (!this.params.date) this.params.date = moment()
-        else this.params.date = moment(this.params.date, "YYYY-MM-DD")
+        if (!this.params.date) this.params.date = moment().format("YYYY-MM-DD")
+
+        this.params.date = moment(this.params.date, "YYYY-MM-DD")
 
         const nvnaUrl = `http://nvna.eu/schedule/?group=${this.params.code}&queryType=${this.params.searchingFor}&Week=${this.params.date.week()}`;
         let url = `${webScrapper}?url=${encodeURIComponent(nvnaUrl)}`;
