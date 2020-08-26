@@ -50,16 +50,16 @@
     async function postLoadActions(postLoadAction) {
         flatpickr(document.getElementById("date"), {
             dateFormat: "Y-m-d",
-            defaultDate: this.params.date.format("YYYY-MM-DD") || "today",
+            defaultDate: this.params.date?.format("YYYY-MM-DD") || "today",
             altFormat: "D, d M Y",
             altInput: true,
             disableMobile: true
         });
 
-        document.getElementById("code").value = this.params.code;
-        document.getElementById("searching-for").value = this.params.searchingFor;
-        document.getElementById("period").value = this.params.period;
-        document.getElementById("weeks-count").value = this.params.weeksCount;
+        document.getElementById("code").value = this.params.code || "";
+        document.getElementById("searching-for").value = this.params.searchingFor || "group";
+        document.getElementById("period").value = this.params.period || "day";
+        document.getElementById("weeks-count").value = this.params.weeksCount || 1;
 
         document.getElementById("submit-btn")
             .addEventListener("click", () => {
