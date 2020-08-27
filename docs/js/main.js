@@ -235,7 +235,7 @@ document.body.onload = (async function () {
             document.getElementById("download-btn")
                 .addEventListener("click", () => {
                     const date = document.getElementById("date").value;
-                    let tsvContent = daysArray.map(d => d.serialize("tsv")).join("\n")
+                    let tsvContent = daysArray.map(d => d.serialize("tsv")).join("\n").trim()
                     let filename = prompt('Въведи име на файл', date);
                     if (filename === null) return;
                     filename = (filename || date) + ".tsv";
