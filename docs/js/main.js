@@ -231,10 +231,14 @@ document.body.onload = (async function () {
                     }
                 ));
 
+            // Download handler
             document.getElementById("download-btn")
                 .addEventListener("click", () => {
+                    const date = document.getElementById("date").value;
                     let tsvContent = daysArray.map(d => d.serialize("tsv")).join("\n")
-                    let filename = (prompt('Въведи име на файл', date.value) || date.value) + ".tsv";
+                    let filename = prompt('Въведи име на файл', date);
+                    if (filename === null) return;
+                    filename = (filename || date) + ".tsv";
                     let file = new Blob([tsvContent], {type: "data:application/octet-stream"});
                     if (window.navigator.msSaveOrOpenBlob) // IE10+
                         window.navigator.msSaveOrOpenBlob(file, filename);
