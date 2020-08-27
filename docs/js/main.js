@@ -1,5 +1,9 @@
 document.body.onload = (async function () {
     const webScrapper = `https://web--scrapper.herokuapp.com/webscrapper`;
+
+    //"warm up" step
+    fetch(`${webScrapper}?url=${encodeURIComponent("http://schedule.nvna.free.bg")}`)
+
     const daysArray = []; // LessonDay[]
     const content = document.getElementById("content");
 
@@ -65,7 +69,7 @@ document.body.onload = (async function () {
             document.getElementById("weeks-count").hidden = false;
         }
 
-        // Form submit
+        // Form submit handler
         document.getElementById("submit-btn")
             .addEventListener("click", () => {
                 const query = {
@@ -81,9 +85,6 @@ document.body.onload = (async function () {
                     return;
                 }
 
-                document.getElementById("submit-btn").disabled = true;
-                document.getElementById("submit-btn").value = "Зарежда се..."
-
                 if (!query.period.value) query.period.value = "day";
                 if (!query.date.value) query.date.value = moment().format("YYYY-MM-DD");
 
@@ -98,9 +99,9 @@ document.body.onload = (async function () {
                         break;
                 }
 
-                if (window.location.hash === hash) {
-                    document.getElementById("submit-btn").disabled = false;
-                    document.getElementById("submit-btn").value = "Покажи"
+                if (window.location.hash !== hash) {
+                    document.getElementById("submit-btn").disabled = true;
+                    document.getElementById("submit-btn").value = "Зарежда се..."
                 }
 
                 Router.navigate(hash);
@@ -134,13 +135,13 @@ document.body.onload = (async function () {
         if (location.hostname === "localhost" || location.hostname === "127.0.0.1")
             url = '../testData.json';
 
-        const request = fetch(url);
-        const response = await request;
-        const data = await response.json();
+        const data = await fetch(url)
+            .then(r => r.json());
 
         if (!this.params.period) this.params.period = "day";
 
-        let result = {};
+        const result = {};
+        daysArray.length = 0; // clear old queried data
         switch (this.params.period) {
             case "day":
                 result.lessonDay = Lesson.getLessonWeek(data).days
@@ -256,7 +257,14 @@ document.body.onload = (async function () {
     function showError(content) {
         document.getElementById("error-info-box").classList.remove("d-none")
         document.getElementById("error-info-box").textContent = content;
-        setTimeout(() => document.getElementById("error-info-box").classList.add("d-none"), 3000);
+        const hideError = () => document.getElementById("error-info-box").classList.add("d-none")
+        const hideErrorTimeoutFn = setTimeout(hideError, 3000);
+        document.getElementById("error-info-box")
+            .addEventListener("click", function hideErrorHandler() {
+                document.getElementById("error-info-box").removeEventListener("click", hideErrorHandler);
+                clearTimeout(hideErrorTimeoutFn);
+                hideError();
+            })
     }
 
     //////////////////////
