@@ -320,6 +320,9 @@ document.body.onload = (async function () {
                 }
             }
         }
+
+        document.getElementById("back-btn")
+            .addEventListener("click", () => Router.navigate("#/"));
     }
 
     //////////////////////
