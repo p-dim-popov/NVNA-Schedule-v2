@@ -322,7 +322,7 @@ document.body.onload = (async function () {
         }
 
         document.getElementById("back-btn")
-            .addEventListener("click", () => Router.navigate("#/"));
+            .addEventListener("click", () => window.location.href = url.split("#/")[0]);
     }
 
     //////////////////////
