@@ -13,5 +13,7 @@
     <orderEntry type="library" name="bootstrap-datepicker" level="application" />
     <orderEntry type="library" name="tiny-date-picker" level="application" />
     <orderEntry type="library" name="moment.js" level="application" />
+    <orderEntry type="library" name="jquery-3.5.1.slim" level="application" />
+    <orderEntry type="library" name="popper.js" level="application" />
   </component>
 </module>
