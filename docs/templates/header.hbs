@@ -1,6 +1,4 @@
-<div class="row">
-    <div id="error-info-box" class="btn btn-danger d-none col my-2"></div>
-</div>
+{{>errorNotification}}
 <div id="header" class="row">
     <form class="mainForm col bg-light border rounded">
         <div class="container">
@@ -34,7 +32,8 @@
                         <option value="weeks">седмици</option>
                     </select>
                     <div class="input-group-append">
-                        <input class="form-control" type="number" id="weeks-count" name="weeks-count" placeholder="колко (с цифри)" hidden>
+                        <input class="form-control" type="number" id="weeks-count" name="weeks-count"
+                               placeholder="колко (с цифри)" hidden>
                     </div>
                 </div>
 
@@ -45,8 +44,10 @@
                     <input type="text" id="date" name="date" class="form-control" placeholder="Въведи дата"
                            aria-label="Въведи дата" aria-describedby="date-label">
                 </div>
-
+            </div>
+            <div class="row my-3">
                 <input type="button" id="submit-btn" class="btn btn-primary m-2" value="Покажи"/>
+                <input type="button" id="advanced-usage-btn" class="btn btn-primary m-2" value="Виж ефикасно използване"/>
             </div>
         </div>
     </form>

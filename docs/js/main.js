@@ -8,13 +8,16 @@ document.body.onload = (async function () {
     const content = document.getElementById("content");
 
     // Async call to all common templates
-    const [headerTemplateContent, footerTemplateContent] =
+    const [headerTemplateContent, footerTemplateContent, errorNotificationTemplateContent] =
         await Promise
             .all([
                 fetch("./templates/header.hbs"),
-                fetch("./templates/footer.hbs")
+                fetch("./templates/footer.hbs"),
+                fetch("./templates/errorNotification.hbs")
             ])
             .then(async v => await Promise.all(v.map(r => r.text())));
+
+    Handlebars.registerPartial("errorNotification", errorNotificationTemplateContent);
 
     // Compile common templates
     const headerTemplate = Handlebars.compile(headerTemplateContent);
@@ -114,6 +117,10 @@ document.body.onload = (async function () {
                 document.getElementById("weeks-count").hidden =
                     document.getElementById("period").value !== "weeks"
             })
+
+        // Show advanced usage handler
+        document.getElementById("advanced-usage-btn")
+            .addEventListener("click", () => Router.navigate("#/advanced-usage"))
 
         if (!!postLoadAction)
             postLoadAction.call(this)
@@ -271,6 +278,50 @@ document.body.onload = (async function () {
             })
     }
 
+    async function showAdvancedUsage() {
+        content.innerHTML = "";
+        const url = window.location.href.split("#")[0] + "#/";
+        const advancedUsageInstructionsContent = await fetch("./templates/advancedUsageInstructions.hbs")
+            .then(r => r.text());
+        const advancedUsageInstructionsTemplate = Handlebars.compile(advancedUsageInstructionsContent);
+        content.innerHTML += advancedUsageInstructionsTemplate({location: url});
+
+        const searchingFor = {};
+        [searchingFor.day, searchingFor.week] = [...document.getElementsByTagName("select")]
+        const code = {};
+        [code.day, code.week] = [...document.querySelectorAll(`input[id^="code-for-"]`)];
+        const copyLinkBtn = {};
+        [copyLinkBtn.day, copyLinkBtn.week] = [...document.getElementsByTagName("button")];
+
+        Object.entries(copyLinkBtn)
+            .forEach(([k, v]) => v.addEventListener("click", copyLinkFor(k)))
+
+        function copyLinkFor(period) {
+            return async (e) => {
+                if (!code[period].value) {
+                    showError("Няма въведен код!");
+                    return;
+                }
+                const link = `${url}${searchingFor[period].value}/${code[period].value}/${period}`
+                try {
+                    await navigator.clipboard.writeText(link);
+                    const originalText = copyLinkBtn[period].textContent;
+                    copyLinkBtn[period].textContent = "Копиран!";
+                    copyLinkBtn[period].disabled = true;
+
+                    setTimeout(() => {
+                        copyLinkBtn[period].textContent = originalText;
+                        copyLinkBtn[period].disabled = false;
+                    }, 1000)
+                } catch (_) {
+                    document.getElementById(`fallback-copy-input-area-${period}`).value = link;
+                    document.getElementById(`fallback-copy-input-area-${period}`).hidden = false;
+                    document.getElementById(`fallback-copy-input-area-${period}`).select()
+                }
+            }
+        }
+    }
+
     //////////////////////
     // Register paths
     [
@@ -298,6 +349,10 @@ document.body.onload = (async function () {
             path: "#/:searchingFor/:code/:period/:date/:weeksCount", // if period is "weeks" then weekCount should be the count (1 is assumed default)
             before: fetchSchedule,
             on: applyCommonThen(showSchedule)
+        },
+        {
+            path: "#/advanced-usage",
+            on: showAdvancedUsage
         }
     ]
         .forEach(r => Router.add(r));
