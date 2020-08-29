@@ -1,18 +1,30 @@
 {
   "name": "nvna-schedule-v2",
   "version": "1.0.0",
-  "description": "",
-  "main": "main.js",
+  "description": "A better schedule app for my university for own use.",
+  "private": true,
   "directories": {
     "doc": "docs"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "webpack"
   },
-  "author": "",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/p-dim-popov/NVNA-Schedule-v2.git"
+  },
+  "author": "p.dim.popov",
   "license": "MIT",
   "dependencies": {
-    "flatpickr": "^4.6.3",
-    "handlebars": "^4.7.3"
+    "flatpickr": "^4.6.6",
+    "handlebars": "^4.7.6",
+    "hash-router": "github:p-dim-popov/Hash-Router#master",
+    "moment": "^2.27.0"
+  },
+  "devDependencies": {
+    "raw-loader": "^4.0.1",
+    "webpack": "^4.44.1",
+    "webpack-cli": "^3.3.12"
   }
 }

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="JavaScriptLibraryMappings">
-    <file url="PROJECT" libraries="{bootstrap, bootstrap-datepicker, hash-router, jquery-3.5.1, jquery-3.5.1.slim, moment, moment.js, page, popper.js, react-hash-router, tiny-date-picker}" />
+    <file url="PROJECT" libraries="{@babel/standalone, bootstrap, bootstrap-datepicker, hash-router, jquery-3.5.1, jquery-3.5.1.slim, moment, moment.js, page, popper.js, react-hash-router, tiny-date-picker}" />
+    <includedPredefinedLibrary name="Node.js Core" />
   </component>
 </project>

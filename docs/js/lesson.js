@@ -1,4 +1,9 @@
-class Lesson {
+String.prototype.stripHTML = function(){
+    let doc = new DOMParser().parseFromString(this, 'text/html');
+    return doc.body.textContent || "";
+};
+
+export class Lesson {
     constructor(arr) {
         this.span = [];
         this.time = "";
@@ -73,7 +78,7 @@ class Lesson {
     }
 }
 
-class LessonDay {
+export class LessonDay {
     constructor(day, date, ...lessons) {
         this.day = "";
         this.date = "";
@@ -98,7 +103,7 @@ class LessonDay {
     }
 }
 
-class LessonWeek {
+export class LessonWeek {
     constructor(...days) {
         this.days = [];
 
@@ -106,7 +111,7 @@ class LessonWeek {
     }
 }
 
-class LessonWeeks {
+export class LessonWeeks {
     constructor(...lessonWeeks) {
         this.list = [];
 

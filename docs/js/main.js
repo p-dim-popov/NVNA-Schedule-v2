@@ -1,8 +1,28 @@
-document.body.onload = (async function () {
+main();
+
+async function main() {
+    const modules = await Promise.all([
+        import("moment"),
+        import("flatpickr"),
+        import("handlebars"),
+        import("./lesson"),
+        import("hash-router")
+    ])
+
+    window.s = modules;
+    const [
+        {default: moment},
+        {default: flatpickr},
+        Handlebars,
+        {Lesson, LessonDay, LessonWeek, LessonWeeks},
+        {Router}
+    ] = modules;
+
     const webScrapper = `https://web--scrapper.herokuapp.com/webscrapper`;
 
     //"warm up" step
-    fetch(`${webScrapper}?url=${encodeURIComponent("http://schedule.nvna.free.bg")}`)
+    if (location.hostname === "localhost" || location.hostname === "127.0.0.1")
+        fetch(`${webScrapper}?url=${encodeURIComponent("http://schedule.nvna.free.bg")}`)
 
     const daysArray = []; // LessonDay[]
     const content = document.getElementById("content");
@@ -11,8 +31,8 @@ document.body.onload = (async function () {
     const [headerTemplateContent, footerTemplateContent, errorNotificationTemplateContent] =
         await Promise
             .all([
-                fetch("./templates/header.hbs"),
-                fetch("./templates/footer.hbs"),
+                fetch("./templates/common/header.hbs"),
+                fetch("./templates/common/footer.hbs"),
                 fetch("./templates/errorNotification.hbs")
             ])
             .then(async v => await Promise.all(v.map(r => r.text())));
@@ -200,10 +220,10 @@ document.body.onload = (async function () {
         const [lessonTemplateContent, dayTemplateContent, weekTemplateContent, weeksTemplateContent] =
             await Promise
                 .all([
-                    fetch("./templates/lesson.hbs"),
-                    fetch("./templates/day.hbs"),
-                    fetch("./templates/week.hbs"),
-                    fetch("./templates/weeks.hbs")
+                    fetch("./templates/lesson/lesson.hbs"),
+                    fetch("./templates/lesson/day.hbs"),
+                    fetch("./templates/lesson/week.hbs"),
+                    fetch("./templates/lesson/weeks.hbs")
                 ])
                 .then(async v => await Promise.all(v.map(r => r.text())));
 
@@ -234,7 +254,10 @@ document.body.onload = (async function () {
                         let subject = e.target;
                         if (e.target.tagName === "SMALL" || e.target.tagName === "H6") subject = e.target.parentNode;
                         if (!subject.classList.contains("subject")) return;
-                        [...subject.children].pop().classList.toggle("d-none");
+                        [...subject.children]
+                            .pop()
+                            .classList
+                            .toggle("d-none");
                     }
                 ));
 
@@ -361,4 +384,4 @@ document.body.onload = (async function () {
         .forEach(r => Router.add(r));
 
     Router.init();
-})
+}
