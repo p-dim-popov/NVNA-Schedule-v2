@@ -8,7 +8,7 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "clean-bundles-win" : "del /s \"*.bundle.js*\"",
+    "clean-bundles-win": "del /s \"*.bundle.js*\"",
     "build-prod": "yarn clean-bundles-win && webpack --config webpack.prod.js",
     "build-dev": "yarn clean-bundles-win && webpack --config webpack.dev.js"
   },
@@ -23,12 +23,11 @@
     "flatpickr": "^4.6.6",
     "handlebars": "^4.7.6",
     "handlebars-loader": "^1.7.1",
-    "hash-router": "github:p-dim-popov/Hash-Router#master",
-    "http-server": "^0.12.3",
-    "webpack-merge": "^5.1.3"
+    "hash-router": "github:p-dim-popov/Hash-Router#master"
   },
   "devDependencies": {
     "webpack": "^4.44.1",
-    "webpack-cli": "^3.3.12"
+    "webpack-cli": "^3.3.12",
+    "webpack-merge": "^5.1.3"
   }
 }
