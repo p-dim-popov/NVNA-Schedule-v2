@@ -1,5 +1,5 @@
 import dayjs from "dayjs"
-import weekOfYear from "dayjs/plugin/weekOfYear"
+import isoWeek from "dayjs/plugin/isoWeek"
 import flatpickr from "flatpickr"
 import {Lesson, LessonWeeks} from "./lesson"
 import {Router} from "hash-router"
@@ -7,7 +7,7 @@ import {Router} from "hash-router"
 main();
 
 async function main() {
-    dayjs.extend(weekOfYear)
+    dayjs.extend(isoWeek)
 
     const webScrapper = `https://web--scrapper.herokuapp.com/webscrapper`;
 
@@ -58,7 +58,11 @@ async function main() {
             defaultDate: !!this.params.date ? this.params.date.format("YYYY-MM-DD") : "today",
             altFormat: "D, d M Y",
             altInput: true,
-            disableMobile: true
+            disableMobile: true,
+            locale:{
+                firstDayOfWeek: 1
+            },
+            weekNumbers: true
         });
 
         document.getElementById("code").value = this.params.code || "";
@@ -134,11 +138,11 @@ async function main() {
 
         this.params.date = dayjs(this.params.date, "YYYY-MM-DD")
 
-        const nvnaUrl = `http://nvna.eu/schedule/?group=${this.params.code}&queryType=${this.params.searchingFor}&Week=${this.params.date.week()}`;
+        const nvnaUrl = `http://nvna.eu/schedule/?group=${this.params.code}&queryType=${this.params.searchingFor}&Week=${this.params.date.isoWeek()}`;
         let url = `${webScrapper}?url=${encodeURIComponent(nvnaUrl)}`;
 
         if (process.env.NODE_ENV === "development")
-            url = '../../testData.json';
+            url = './testData.json';
 
         const data = await fetch(url)
             .then(r => r.json());
