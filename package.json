@@ -22,10 +22,10 @@
     "dayjs": "^1.8.34",
     "flatpickr": "^4.6.6",
     "handlebars": "^4.7.6",
-    "handlebars-loader": "^1.7.1",
     "hash-router": "github:p-dim-popov/Hash-Router#master"
   },
   "devDependencies": {
+    "handlebars-loader": "^1.7.1",
     "webpack": "^4.44.1",
     "webpack-cli": "^3.3.12",
     "webpack-merge": "^5.1.3"
