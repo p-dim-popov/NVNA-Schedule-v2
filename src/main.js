@@ -1,47 +1,25 @@
+import dayjs from "dayjs"
+import weekOfYear from "dayjs/plugin/weekOfYear"
+import flatpickr from "flatpickr"
+import {Lesson, LessonWeeks} from "./lesson"
+import {Router} from "hash-router"
+
 main();
 
 async function main() {
-    const modules = await Promise.all([
-        import("moment"),
-        import("flatpickr"),
-        import("handlebars"),
-        import("./lesson"),
-        import("hash-router")
-    ])
-
-    window.s = modules;
-    const [
-        {default: moment},
-        {default: flatpickr},
-        Handlebars,
-        {Lesson, LessonDay, LessonWeek, LessonWeeks},
-        {Router}
-    ] = modules;
+    dayjs.extend(weekOfYear)
 
     const webScrapper = `https://web--scrapper.herokuapp.com/webscrapper`;
 
     //"warm up" step
-    if (location.hostname === "localhost" || location.hostname === "127.0.0.1")
+    if (process.env.NODE_ENV === "production")
         fetch(`${webScrapper}?url=${encodeURIComponent("http://schedule.nvna.free.bg")}`)
 
     const daysArray = []; // LessonDay[]
     const content = document.getElementById("content");
 
-    // Async call to all common templates
-    const [headerTemplateContent, footerTemplateContent, errorNotificationTemplateContent] =
-        await Promise
-            .all([
-                fetch("./templates/common/header.hbs"),
-                fetch("./templates/common/footer.hbs"),
-                fetch("./templates/errorNotification.hbs")
-            ])
-            .then(async v => await Promise.all(v.map(r => r.text())));
-
-    Handlebars.registerPartial("errorNotification", errorNotificationTemplateContent);
-
-    // Compile common templates
-    const headerTemplate = Handlebars.compile(headerTemplateContent);
-    const footerTemplate = Handlebars.compile(footerTemplateContent);
+    const headerTemplate = require("../docs/templates/common/header.hbs");
+    const footerTemplate = require("../docs/templates/common/footer.hbs");
 
     /**
      * Delegate/action to apply header, footer, attach events and etc...
@@ -109,7 +87,7 @@ async function main() {
                 }
 
                 if (!query.period.value) query.period.value = "day";
-                if (!query.date.value) query.date.value = moment().format("YYYY-MM-DD");
+                if (!query.date.value) query.date.value = dayjs().format("YYYY-MM-DD");
 
                 let hash = "";
                 switch (query.period.value) {
@@ -152,14 +130,14 @@ async function main() {
             return // redirect to error
         }
 
-        if (!this.params.date) this.params.date = moment().format("YYYY-MM-DD")
+        if (!this.params.date) this.params.date = dayjs().format("YYYY-MM-DD")
 
-        this.params.date = moment(this.params.date, "YYYY-MM-DD")
+        this.params.date = dayjs(this.params.date, "YYYY-MM-DD")
 
         const nvnaUrl = `http://nvna.eu/schedule/?group=${this.params.code}&queryType=${this.params.searchingFor}&Week=${this.params.date.week()}`;
         let url = `${webScrapper}?url=${encodeURIComponent(nvnaUrl)}`;
 
-        if (location.hostname === "localhost" || location.hostname === "127.0.0.1")
+        if (process.env.NODE_ENV === "development")
             url = '../testData.json';
 
         const data = await fetch(url)
@@ -172,7 +150,7 @@ async function main() {
         switch (this.params.period) {
             case "day":
                 result.lessonDay = Lesson.getLessonWeek(data).days
-                    .find(d => moment(d.date, "YYYY-MM-DD").format() === this.params.date.format());
+                    .find(d => dayjs(d.date, "YYYY-MM-DD").format() === this.params.date.format());
                 daysArray
                     .push(result.lessonDay);
                 break;
@@ -217,34 +195,18 @@ async function main() {
 
     // "on" function: render fetched data to client
     async function showSchedule() {
-        const [lessonTemplateContent, dayTemplateContent, weekTemplateContent, weeksTemplateContent] =
-            await Promise
-                .all([
-                    fetch("./templates/lesson/lesson.hbs"),
-                    fetch("./templates/lesson/day.hbs"),
-                    fetch("./templates/lesson/week.hbs"),
-                    fetch("./templates/lesson/weeks.hbs")
-                ])
-                .then(async v => await Promise.all(v.map(r => r.text())));
-
-        Handlebars.registerPartial("lesson", lessonTemplateContent);
-        Handlebars.registerPartial("day", dayTemplateContent);
-        Handlebars.registerPartial("week", weekTemplateContent);
-        Handlebars.registerPartial("weeks", weeksTemplateContent);
-
         if (this.event.previousResult.lessonDay) {
-            const dayTemplate = Handlebars.compile(dayTemplateContent);
+            const dayTemplate = require("../docs/templates/lesson/day.hbs");
             content.innerHTML += dayTemplate(this.event.previousResult.lessonDay);
         } else if (this.event.previousResult.lessonWeek) {
-            const weekTemplate = Handlebars.compile(weekTemplateContent);
+            const weekTemplate = require("../docs/templates/lesson/week.hbs");
             content.innerHTML += weekTemplate(this.event.previousResult.lessonWeek)
         } else if (this.event.previousResult.lessonWeeks) {
-            const weeksTemplate = Handlebars.compile(weeksTemplateContent);
+            const weeksTemplate = require("../docs/templates/lesson/weeks.hbs");
             content.innerHTML += weeksTemplate(this.event.previousResult.lessonWeeks)
         }
 
-        const downloadBtnTemplate = Handlebars.compile(await fetch("./templates/downloadBtn.hbs")
-            .then(r => r.text()));
+        const downloadBtnTemplate = require("../docs/templates/downloadBtn.hbs");
         content.innerHTML += downloadBtnTemplate({});
 
         return async function () {
@@ -304,9 +266,7 @@ async function main() {
     async function showAdvancedUsage() {
         content.innerHTML = "";
         const url = window.location.href.split("#")[0] + "#/";
-        const advancedUsageInstructionsContent = await fetch("./templates/advancedUsageInstructions.hbs")
-            .then(r => r.text());
-        const advancedUsageInstructionsTemplate = Handlebars.compile(advancedUsageInstructionsContent);
+        const advancedUsageInstructionsTemplate = require("../docs/templates/advancedUsageInstructions.hbs");
         content.innerHTML += advancedUsageInstructionsTemplate({location: url});
 
         const searchingFor = {};
