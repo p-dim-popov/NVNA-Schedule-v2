@@ -9,8 +9,9 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "clean-bundles-win": "del /s \"*.bundle.js*\"",
-    "build-prod": "yarn clean-bundles-win && webpack --config webpack.prod.js",
-    "build-dev": "yarn clean-bundles-win && webpack --config webpack.dev.js"
+    "build": "yarn clean-bundles-win && webpack --config webpack.prod.js",
+    "build-dev": "yarn clean-bundles-win && webpack --config webpack.dev.js",
+    "start": "webpack-dev-server --config webpack.dev.js"
   },
   "repository": {
     "type": "git",
@@ -25,9 +26,14 @@
     "hash-router": "github:p-dim-popov/Hash-Router#master"
   },
   "devDependencies": {
+    "@babel/core": "^7.11.4",
+    "@babel/preset-env": "^7.11.0",
+    "babel-loader": "^8.1.0",
     "handlebars-loader": "^1.7.1",
+    "html-webpack-plugin": "^4.3.0",
     "webpack": "^4.44.1",
     "webpack-cli": "^3.3.12",
+    "webpack-dev-server": "^3.11.0",
     "webpack-merge": "^5.1.3"
   }
 }

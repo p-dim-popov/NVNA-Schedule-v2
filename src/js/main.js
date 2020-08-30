@@ -18,8 +18,8 @@ async function main() {
     const daysArray = []; // LessonDay[]
     const content = document.getElementById("content");
 
-    const headerTemplate = require("../docs/templates/common/header.hbs");
-    const footerTemplate = require("../docs/templates/common/footer.hbs");
+    const headerTemplate = require("../../docs/templates/common/header.hbs");
+    const footerTemplate = require("../../docs/templates/common/footer.hbs");
 
     /**
      * Delegate/action to apply header, footer, attach events and etc...
@@ -138,7 +138,7 @@ async function main() {
         let url = `${webScrapper}?url=${encodeURIComponent(nvnaUrl)}`;
 
         if (process.env.NODE_ENV === "development")
-            url = '../testData.json';
+            url = '../../testData.json';
 
         const data = await fetch(url)
             .then(r => r.json());
@@ -196,17 +196,17 @@ async function main() {
     // "on" function: render fetched data to client
     async function showSchedule() {
         if (this.event.previousResult.lessonDay) {
-            const dayTemplate = require("../docs/templates/lesson/day.hbs");
+            const dayTemplate = require("../../docs/templates/lesson/day.hbs");
             content.innerHTML += dayTemplate(this.event.previousResult.lessonDay);
         } else if (this.event.previousResult.lessonWeek) {
-            const weekTemplate = require("../docs/templates/lesson/week.hbs");
+            const weekTemplate = require("../../docs/templates/lesson/week.hbs");
             content.innerHTML += weekTemplate(this.event.previousResult.lessonWeek)
         } else if (this.event.previousResult.lessonWeeks) {
-            const weeksTemplate = require("../docs/templates/lesson/weeks.hbs");
+            const weeksTemplate = require("../../docs/templates/lesson/weeks.hbs");
             content.innerHTML += weeksTemplate(this.event.previousResult.lessonWeeks)
         }
 
-        const downloadBtnTemplate = require("../docs/templates/downloadBtn.hbs");
+        const downloadBtnTemplate = require("../../docs/templates/downloadBtn.hbs");
         content.innerHTML += downloadBtnTemplate({});
 
         return async function () {
@@ -266,7 +266,7 @@ async function main() {
     async function showAdvancedUsage() {
         content.innerHTML = "";
         const url = window.location.href.split("#")[0] + "#/";
-        const advancedUsageInstructionsTemplate = require("../docs/templates/advancedUsageInstructions.hbs");
+        const advancedUsageInstructionsTemplate = require("../../docs/templates/advancedUsageInstructions.hbs");
         content.innerHTML += advancedUsageInstructionsTemplate({location: url});
 
         const searchingFor = {};
