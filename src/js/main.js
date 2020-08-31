@@ -175,7 +175,7 @@ async function main() {
                 let urls = [];
                 for (let i = 1; i < +this.params.weeksCount; i++) /* begin from 1 because we already have the first week */ {
                     const nvnaUrl =
-                        `http://nvna.eu/schedule/?group=${this.params.code}&queryType=${this.params.searchingFor}&Week=${this.params.date.week() + i}`;
+                        `http://nvna.eu/schedule/?group=${this.params.code}&queryType=${this.params.searchingFor}&Week=${this.params.date.isoWeek() + i}`;
                     urls.push(fetch(`${webScrapper}?url=${encodeURIComponent(nvnaUrl)}`))
                 }
 
