@@ -5,11 +5,11 @@ String.prototype.stripHTML = function(){
 
 export class Lesson {
     constructor(arr) {
-        this.span = [];
-        this.time = "";
-        this.name = "";
-        this.period = "";
-        this.variousData = [];
+        this.span = []; // int[]
+        this.time = ""; //
+        this.name = ""; //
+        this.period = ""; //
+        this.variousData = [];// any
 
         if (arr.length <= 1) return [];
         arr = arr.map(it => it.stripHTML().trim());

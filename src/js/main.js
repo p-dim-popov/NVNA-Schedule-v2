@@ -3,8 +3,11 @@ import isoWeek from "dayjs/plugin/isoWeek"
 import flatpickr from "flatpickr"
 import {Lesson, LessonWeeks} from "./lesson"
 import {Router} from "hash-router"
+import {registerServiceWorker, installPrompt} from "./install"
 
 main();
+registerServiceWorker();
+installPrompt();
 
 async function main() {
     dayjs.extend(isoWeek)
@@ -18,8 +21,8 @@ async function main() {
     const daysArray = []; // LessonDay[]
     const content = document.getElementById("content");
 
-    const headerTemplate = require("../../docs/templates/common/header.hbs");
-    const footerTemplate = require("../../docs/templates/common/footer.hbs");
+    const headerTemplate = require("../templates/common/header.hbs");
+    const footerTemplate = require("../templates/common/footer.hbs");
 
     /**
      * Delegate/action to apply header, footer, attach events and etc...
@@ -144,8 +147,14 @@ async function main() {
         if (process.env.NODE_ENV === "development")
             url = './testData.json';
 
-        const data = await fetch(url)
-            .then(r => r.json());
+        let data;
+        try{
+            data = await fetch(url)
+                .then(r => r.json())
+        }
+        catch (e) {
+            window.location.reload()
+        }
 
         if (!this.params.period) this.params.period = "day";
 
@@ -200,17 +209,17 @@ async function main() {
     // "on" function: render fetched data to client
     async function showSchedule() {
         if (this.event.previousResult.lessonDay) {
-            const dayTemplate = require("../../docs/templates/lesson/day.hbs");
+            const dayTemplate = require("../templates/lesson/day.hbs");
             content.innerHTML += dayTemplate(this.event.previousResult.lessonDay);
         } else if (this.event.previousResult.lessonWeek) {
-            const weekTemplate = require("../../docs/templates/lesson/week.hbs");
+            const weekTemplate = require("../templates/lesson/week.hbs");
             content.innerHTML += weekTemplate(this.event.previousResult.lessonWeek)
         } else if (this.event.previousResult.lessonWeeks) {
-            const weeksTemplate = require("../../docs/templates/lesson/weeks.hbs");
+            const weeksTemplate = require("../templates/lesson/weeks.hbs");
             content.innerHTML += weeksTemplate(this.event.previousResult.lessonWeeks)
         }
 
-        const downloadBtnTemplate = require("../../docs/templates/downloadBtn.hbs");
+        const downloadBtnTemplate = require("../templates/downloadBtn.hbs");
         content.innerHTML += downloadBtnTemplate({});
 
         return async function () {
@@ -270,7 +279,7 @@ async function main() {
     async function showAdvancedUsage() {
         content.innerHTML = "";
         const url = window.location.href.split("#")[0] + "#/";
-        const advancedUsageInstructionsTemplate = require("../../docs/templates/advancedUsageInstructions.hbs");
+        const advancedUsageInstructionsTemplate = require("../templates/advancedUsageInstructions.hbs");
         content.innerHTML += advancedUsageInstructionsTemplate({location: url});
 
         const searchingFor = {};

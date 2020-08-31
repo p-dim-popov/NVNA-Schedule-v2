@@ -1,5 +1,10 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const {CleanWebpackPlugin} = require('clean-webpack-plugin');
+const WorkboxPlugin = require('workbox-webpack-plugin');
+const CopyPlugin = require('copy-webpack-plugin');
+
+const WebpackPwaManifest = require("webpack-pwa-manifest");
 
 module.exports = {
     entry: {
@@ -12,7 +17,7 @@ module.exports = {
     },
     devServer: {
         contentBase: path.join(__dirname, 'docs'),
-        port: 8000
+        port: 8081
     },
     module: {
         rules: [
@@ -33,7 +38,25 @@ module.exports = {
         new HtmlWebpackPlugin({
             filename: 'index.html',
             template: './src/index.html',
-            favicon: "./docs/favicon.ico"
+            favicon: './src/favicon.ico'
+        }),
+        // new WorkboxPlugin.GenerateSW({
+        //     // clientsClaim: true,
+        //     // skipWaiting: true,
+        //     include: [/offline.html/],
+        //     sourcemap: true,
+        //     navigateFallback: './offline.html'
+        // }),
+        new WorkboxPlugin.InjectManifest({
+            swSrc: './src/js/service-worker.js',
+            include: [/offline.html/]
+        }),
+        new CopyPlugin({
+            patterns: [
+                {from: './src/manifest.json'},
+                {from: './src/images/', to: 'images/'},
+                {from: './src/offline.html'}
+            ]
         })
     ]
 };
