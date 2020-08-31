@@ -62,7 +62,7 @@ async function main() {
             altFormat: "D, d M Y",
             altInput: true,
             disableMobile: true,
-            locale:{
+            locale: {
                 firstDayOfWeek: 1
             },
             weekNumbers: true
@@ -123,10 +123,6 @@ async function main() {
                     document.getElementById("period").value !== "weeks"
             })
 
-        // Show advanced usage handler
-        document.getElementById("advanced-usage-btn")
-            .addEventListener("click", () => Router.navigate("#/advanced-usage"))
-
         if (!!postLoadAction)
             postLoadAction.call(this)
     }
@@ -148,11 +144,10 @@ async function main() {
             url = './testData.json';
 
         let data;
-        try{
+        try {
             data = await fetch(url)
                 .then(r => r.json())
-        }
-        catch (e) {
+        } catch (e) {
             window.location.reload()
         }
 
@@ -208,16 +203,29 @@ async function main() {
 
     // "on" function: render fetched data to client
     async function showSchedule() {
+        let schedule = "";
         if (this.event.previousResult.lessonDay) {
             const dayTemplate = require("../templates/lesson/day.hbs");
-            content.innerHTML += dayTemplate(this.event.previousResult.lessonDay);
+            schedule += dayTemplate(this.event.previousResult.lessonDay);
         } else if (this.event.previousResult.lessonWeek) {
             const weekTemplate = require("../templates/lesson/week.hbs");
-            content.innerHTML += weekTemplate(this.event.previousResult.lessonWeek)
+            schedule += weekTemplate(this.event.previousResult.lessonWeek)
         } else if (this.event.previousResult.lessonWeeks) {
             const weeksTemplate = require("../templates/lesson/weeks.hbs");
-            content.innerHTML += weeksTemplate(this.event.previousResult.lessonWeeks)
+            schedule += weeksTemplate(this.event.previousResult.lessonWeeks)
         }
+
+        content.innerHTML +=
+            `<div class="container">
+                <div class="row justify-content-center">
+                    <div class="col"/>
+                    <div class="col-auto">
+                        ${schedule}
+                    </div>
+                    <div class="col"/>
+                </div>
+            </div>`
+
 
         const downloadBtnTemplate = require("../templates/downloadBtn.hbs");
         content.innerHTML += downloadBtnTemplate({});
@@ -277,50 +285,51 @@ async function main() {
     }
 
     async function showAdvancedUsage() {
-        content.innerHTML = "";
         const url = window.location.href.split("#")[0] + "#/";
         const advancedUsageInstructionsTemplate = require("../templates/advancedUsageInstructions.hbs");
         content.innerHTML += advancedUsageInstructionsTemplate({location: url});
 
-        const searchingFor = {};
-        [searchingFor.day, searchingFor.week] = [...document.getElementsByTagName("select")]
-        const code = {};
-        [code.day, code.week] = [...document.querySelectorAll(`input[id^="code-for-"]`)];
-        const copyLinkBtn = {};
-        [copyLinkBtn.day, copyLinkBtn.week] = [...document.getElementsByTagName("button")];
+        return function () {
+            const searchingFor = {};
+            [searchingFor.day, searchingFor.week] = [...document.querySelectorAll(`select[id^="select-searching-for-"]`)]
+            const code = {};
+            [code.day, code.week] = [...document.querySelectorAll(`input[id^="code-for-"]`)];
+            const copyLinkBtn = {};
+            [copyLinkBtn.day, copyLinkBtn.week] = [...document.querySelectorAll(`button[id^="copy-link-for-"]`)];
 
-        Object.entries(copyLinkBtn)
-            .forEach(([k, v]) => v.addEventListener("click", copyLinkFor(k)))
+            function copyLinkFor(period) {
+                return async (e) => {
+                    if (!code[period].value) {
+                        showError("Няма въведен код!");
+                        return;
+                    }
+                    const link = `${url}${searchingFor[period].value}/${code[period].value}/${period}`
+                    try {
+                        await navigator.clipboard.writeText(link);
+                        const originalText = copyLinkBtn[period].textContent;
+                        copyLinkBtn[period].textContent = "Копиран!";
+                        copyLinkBtn[period].disabled = true;
 
-        function copyLinkFor(period) {
-            return async (e) => {
-                if (!code[period].value) {
-                    showError("Няма въведен код!");
-                    return;
-                }
-                const link = `${url}${searchingFor[period].value}/${code[period].value}/${period}`
-                try {
-                    await navigator.clipboard.writeText(link);
-                    const originalText = copyLinkBtn[period].textContent;
-                    copyLinkBtn[period].textContent = "Копиран!";
-                    copyLinkBtn[period].disabled = true;
-
-                    setTimeout(() => {
-                        copyLinkBtn[period].textContent = originalText;
-                        copyLinkBtn[period].disabled = false;
-                    }, 1000)
-                } catch (_) {
-                    document.getElementById(`fallback-copy-input-area-${period}`).value = link;
-                    document.getElementById(`fallback-copy-input-area-${period}`).hidden = false;
-                    document.getElementById(`fallback-copy-input-area-${period}`).select()
+                        setTimeout(() => {
+                            copyLinkBtn[period].textContent = originalText;
+                            copyLinkBtn[period].disabled = false;
+                        }, 1000)
+                    } catch (_) {
+                        document.getElementById(`fallback-copy-input-area-${period}`).value = link;
+                        document.getElementById(`fallback-copy-input-area-${period}`).hidden = false;
+                        document.getElementById(`fallback-copy-input-area-${period}`).select()
+                    }
                 }
             }
-        }
 
-        document.getElementById("back-btn")
-            .addEventListener("click", () => window.location.href = url.split("#/")[0]);
+            Object.entries(copyLinkBtn)
+                .forEach(([k, v]) => v.addEventListener("click", copyLinkFor(k)))
+        }
     }
 
+    function showTimetable() {
+        content.innerHTML += require("../templates/timetable.hbs")({});
+    }
     //////////////////////
     // Register paths
     [
@@ -351,8 +360,17 @@ async function main() {
         },
         {
             path: "#/advanced-usage",
-            on: showAdvancedUsage
-        }
+            on: applyCommonThen(showAdvancedUsage)
+        },
+        {
+            path: "#/timetable",
+            on: applyCommonThen(showTimetable)
+        },
+        // {
+        //     path: "#/lecturers-codes",
+        //     before: fetchLecturerCodes,
+        //     on: applyCommonThen(showLecturerCodes)
+        // }
     ]
         .forEach(r => Router.add(r));
 

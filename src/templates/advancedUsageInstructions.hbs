@@ -1,70 +1,71 @@
-{{>errorNotification}}
-<div class="card row">
-    <h5 class="card-header">Ефикасно използване</h5>
-    <div class="card-body">
-        <div class="container">
-            <div class="row">
-                <div class="card col my-2">
-                    <div class="card-header">
-                        Виж днешното разписание... Всеки ден!
-                    </div>
-                    <div class="card-body">
-                        <p class="card-text">
-                            Просто запази този линк с твоя код към "отметки" и виж дневното разписание всеки път като го
-                            кликнеш!
-                        </p>
-                        <div class="input-group mb-3">
-                            <select class="custom-select" id="select-searching-for-day">
-                                <option value="group">group</option>
-                                <option value="lecturer">lecturer</option>
-                                <option value="room">room</option>
-                            </select>
+<div class="container">
+    <div class="card row">
+        <h5 class="card-header">Ефикасно използване</h5>
+        <div class="card-body">
+            <div class="container">
+                <div class="row">
+                    <div class="card col my-2">
+                        <div class="card-header">
+                            Виж днешното разписание... Всеки ден!
+                        </div>
+                        <div class="card-body">
+                            <p class="card-text">
+                                Просто запази този линк с твоя код към "отметки" и виж дневното разписание всеки път като го
+                                кликнеш!
+                            </p>
+                            <div class="input-group mb-3">
+                                <select class="custom-select" id="select-searching-for-day">
+                                    <option value="group">група</option>
+                                    <option value="lecturer">преподавател</option>
+                                    <option value="room">зала</option>
+                                </select>
+                                <input
+                                        type="text"
+                                        id="code-for-day-link"
+                                        class="form-control"
+                                        placeholder="въведи код">
+                            </div>
+                            <button id="copy-link-for-day-btn" class="btn btn-primary">Копирай линка!</button>
                             <input
+                                    id="fallback-copy-input-area-day"
                                     type="text"
-                                    id="code-for-day-link"
-                                    class="form-control"
-                                    placeholder="въведи код">
+                                    class="form-control my-2"
+                                    readonly
+                                    hidden>
                         </div>
-                        <button id="copy-link-for-day-btn" class="btn btn-primary">Копирай линка!</button>
-                        <input
-                                id="fallback-copy-input-area-day"
-                                type="text"
-                                class="form-control my-2"
-                                readonly
-                                hidden>
                     </div>
                 </div>
-            </div>
-            <div class="row">
-                <div class="card col my-2">
-                    <div class="card-header">
-                        Виж седмичното разписание всеки ден!
-                    </div>
-                    <div class="card-body">
-                        <p class="card-text">Същото като дневния линк, но за цялата седмица.</p>
-                        <div class="input-group mb-3">
-                            <select class="custom-select" id="select-searching-for-week">
-                                <option value="group">group</option>
-                                <option value="lecturer">lecturer</option>
-                                <option value="room">room</option>
-                            </select>
-                            <input type="text"
-                                   id="code-for-week-link"
-                                   class="form-control"
-                                   placeholder="въведи код">
+                <div class="row">
+                    <div class="card col my-2">
+                        <div class="card-header">
+                            Виж седмичното разписание всеки ден!
                         </div>
-                        <button id="copy-link-for-week-btn" class="btn btn-primary">Копирай линка!</button>
-                        <input
-                                id="fallback-copy-input-area-week"
-                                type="text"
-                                class="form-control my-2"
-                                readonly
-                                hidden>
+                        <div class="card-body">
+                            <p class="card-text">Същото като дневния линк, но за цялата седмица.</p>
+                            <div class="input-group mb-3">
+                                <select class="custom-select" id="select-searching-for-week">
+                                    <option value="group">група</option>
+                                    <option value="lecturer">преподавател</option>
+                                    <option value="room">зала</option>
+                                </select>
+                                <input type="text"
+                                       id="code-for-week-link"
+                                       class="form-control"
+                                       placeholder="въведи код">
+                            </div>
+                            <button id="copy-link-for-week-btn" class="btn btn-primary">Копирай линка!</button>
+                            <input
+                                    id="fallback-copy-input-area-week"
+                                    type="text"
+                                    class="form-control my-2"
+                                    readonly
+                                    hidden>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="row">
-                <button id="back-btn" class="btn btn-primary">Към началото</button>
+                <div class="row">
+                    <a href="#/" class="btn btn-primary">Към началото</a>
+                </div>
             </div>
         </div>
     </div>

@@ -1,9 +1,9 @@
 {{>../errorNotification}}
-<div id="header" class="row">
-    <form class="mainForm col bg-light border rounded">
+<div id="header" class="container-fluid bg-light px-3 pt-3">
+    <div class="row">
         <div class="container">
-            <div class="row my-3">
-                <div class="input-group mb-3">
+            <div class="row">
+                <div class="input-group m-1">
                     <div class="input-group-prepend">
                         <label class="input-group-text" for="searching-for">За</label>
                     </div>
@@ -14,15 +14,16 @@
                     </select>
                 </div>
 
-                <div class="input-group mb-3">
+                <div class="input-group m-1">
                     <div class="input-group-prepend">
                         <span class="input-group-text" id="code-label">Код</span>
                     </div>
-                    <input type="text" id="code" name="code" class="form-control" placeholder="Въведи класно/код/зала"
+                    <input type="text" id="code" name="code" class="form-control"
+                           placeholder="Въведи класно/код/зала"
                            aria-label="Въведи класно/код/зала" aria-describedby="code-label">
                 </div>
 
-                <div class="input-group mb-3">
+                <div class="input-group m-1">
                     <div class="input-group-prepend">
                         <label class="input-group-text" for="period">Период</label>
                     </div>
@@ -37,7 +38,7 @@
                     </div>
                 </div>
 
-                <div class="input-group mb-3">
+                <div class="input-group m-1">
                     <div class="input-group-prepend">
                         <span class="input-group-text" id="date-label">Дата</span>
                     </div>
@@ -45,10 +46,35 @@
                            aria-label="Въведи дата" aria-describedby="date-label">
                 </div>
             </div>
-            <div class="row my-3">
-                <input type="button" id="submit-btn" class="btn btn-primary m-2" value="Покажи"/>
-                <input type="button" id="advanced-usage-btn" class="btn btn-primary m-2" value="Виж ефикасно използване"/>
+        </div>
+    </div>
+    <div class="row m-2 justify-content-center">
+        <button id="submit-btn" class="col-auto btn btn-primary m-2">Покажи</button>
+        <a id="advanced-usage-btn" href="#/advanced-usage" class="col-auto btn btn-secondary m-2">Ефикасно ползване</a>
+        <style>
+            .dropdown-hover {
+                position: relative;
+            }
+
+            .dropdown-hover-content {
+                position: absolute;
+                top: 90%;
+                left: 10%;
+                display: none;
+                z-index: 1;
+            }
+
+            .dropdown-hover:hover .dropdown-hover-content {
+                display: block;
+            }
+        </style>
+        <div class="dropdown-hover">
+            <button id="more-btn" class="col-auto btn btn-secondary m-2">☰ Още</button>
+            <div class="dropdown-hover-content dropdown-menu">
+                <a class="dropdown-item" href="#/timetable">Разписание на часовете</a>
+                <a class="dropdown-item" href="#/lecturers-codes">Преподаватели</a>
             </div>
         </div>
-    </form>
+    </div>
 </div>
+
