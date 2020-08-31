@@ -16,7 +16,7 @@ export function installPrompt(){
     setTimeout(() => {
         window.addEventListener('beforeinstallprompt', saveBeforeInstallPromptEvent);
         window.addEventListener('appinstalled', logAppInstalled);
-        const footerForInstall = document.getElementById("footer")
+        const footerForInstall = document.getElementById("footer-for-install")
         const installButton = footerForInstall.getElementsByTagName('button')[0];
 
         let deferredInstallPrompt;

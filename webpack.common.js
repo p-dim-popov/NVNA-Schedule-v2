@@ -8,8 +8,7 @@ const WebpackPwaManifest = require("webpack-pwa-manifest");
 
 module.exports = {
     entry: {
-        main: ['./src/js/main.js'],
-        install: ['./src/js/install.js']
+        main: ['./src/js/main.js']
     },
     output: {
         filename: '[name].bundle.js',
@@ -40,13 +39,6 @@ module.exports = {
             template: './src/index.html',
             favicon: './src/favicon.ico'
         }),
-        // new WorkboxPlugin.GenerateSW({
-        //     // clientsClaim: true,
-        //     // skipWaiting: true,
-        //     include: [/offline.html/],
-        //     sourcemap: true,
-        //     navigateFallback: './offline.html'
-        // }),
         new WorkboxPlugin.InjectManifest({
             swSrc: './src/js/service-worker.js',
             include: [/offline.html/]
