@@ -2,8 +2,7 @@ import {showError} from "../notifications";
 
 export async function showAdvancedUsage() {
     const url = window.location.href.split("#")[0] + "#/";
-    const advancedUsageInstructionsTemplate = require("../../templates/advancedUsageInstructions.hbs");
-    this.content.innerHTML += advancedUsageInstructionsTemplate({location: url});
+    this.content.innerHTML += (await import("../../templates/advancedUsageInstructions.hbs")).default({location: url});
 
     return function () {
         const searchingFor = {};

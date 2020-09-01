@@ -1,16 +1,15 @@
 import dayjs from "dayjs";
-import isoWeek from "dayjs/plugin/isoWeek";
-import {Lesson, LessonWeeks} from "../lesson";
 
 const webScrapper = `https://web--scrapper.herokuapp.com/webscrapper`;
 export const daysArray = [];
-dayjs.extend(isoWeek)
 
 // "before" function: fetch schedule from remote
 export async function fetchSchedule() {
     if (!this.params.code) {
         return // redirect to error
     }
+
+    dayjs.extend((await import("dayjs/plugin/isoWeek")).default)
 
     if (!this.params.date) this.params.date = dayjs().format("YYYY-MM-DD")
 
@@ -31,6 +30,8 @@ export async function fetchSchedule() {
     }
 
     if (!this.params.period) this.params.period = "day";
+
+    const { Lesson, LessonWeeks} = await import("../lesson");
 
     const result = {};
     daysArray.length = 0; // clear old queried data

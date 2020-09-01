@@ -4,9 +4,6 @@ import {showError} from "./notifications";
 
 const content = document.getElementById("content");
 
-const headerTemplate = require("../templates/common/header.hbs");
-const footerTemplate = require("../templates/common/footer.hbs");
-
 /**
  * Delegate/action to apply header, footer, attach events and etc...
  * Attaches main div to context as "content". Clears content innerHTML
@@ -26,11 +23,11 @@ export function applyCommonThen(func) {
 }
 
 async function showHeader() {
-    this.content.innerHTML += headerTemplate({});
+    this.content.innerHTML += require("../templates/common/header.hbs")({});
 }
 
 async function showFooter() {
-    this.content.innerHTML += footerTemplate({});
+    this.content.innerHTML += require("../templates/common/footer.hbs")({});
 }
 
 // attaching events to header and footer and filling input fields if has queried data
