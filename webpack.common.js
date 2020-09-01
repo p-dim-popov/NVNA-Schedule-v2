@@ -51,6 +51,13 @@ module.exports = {
             ]
         }),
         new CompressionPlugin({
+            filename: '[path].gz',
+            algorithm: 'gzip',
+            test: /\.js$|\.css$|\.html$/,
+            threshold: 10240,
+            minRatio: 0.8,
+        }),
+        new CompressionPlugin({
             filename: '[path].br',
             algorithm: 'brotliCompress',
             test: /\.(js|css|html|svg)$/,
@@ -59,7 +66,6 @@ module.exports = {
             },
             threshold: 10240,
             minRatio: 0.8,
-            deleteOriginalAssets: false,
-        })
+        }),
     ]
 };
