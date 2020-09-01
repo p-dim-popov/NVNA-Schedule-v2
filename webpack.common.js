@@ -1,10 +1,9 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const {CleanWebpackPlugin} = require('clean-webpack-plugin');
 const WorkboxPlugin = require('workbox-webpack-plugin');
 const CopyPlugin = require('copy-webpack-plugin');
-
-const WebpackPwaManifest = require("webpack-pwa-manifest");
+const CompressionPlugin = require('compression-webpack-plugin');
+const zlib = require("zlib");
 
 module.exports = {
     entry: {
@@ -50,6 +49,17 @@ module.exports = {
                 {from: './src/images/', to: 'images/'},
                 {from: './src/offline.html'}
             ]
+        }),
+        new CompressionPlugin({
+            filename: '[path].br',
+            algorithm: 'brotliCompress',
+            test: /\.(js|css|html|svg)$/,
+            compressionOptions: {
+                level: 11,
+            },
+            threshold: 10240,
+            minRatio: 0.8,
+            deleteOriginalAssets: false,
         })
     ]
 };
