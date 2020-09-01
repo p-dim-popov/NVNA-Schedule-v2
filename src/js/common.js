@@ -13,6 +13,23 @@ const content = document.getElementById("content");
 export function applyCommonThen(func) {
     return async function () {
         this.content = content;
+
+        this.params.searchingFor = ["group", "lecturer", "room"].includes(this.params.searchingFor)
+            ? this.params.searchingFor
+            : document.getElementById("searching-for")?.value || "group";
+        this.params.code = /\d+/.test(this.params.code)
+            ? this.params.code
+            : document.getElementById("code")?.value || "";
+        this.params.period = ["day", "week", "weeks"].includes(this.params.period)
+            ? this.params.period
+            : document.getElementById("period")?.value || "day";
+        this.params.weeksCount = /\d+/.test(this.params.weeksCount)
+            ? this.params.weeksCount
+            : document.getElementById("weeks-count")?.value || 0;
+        this.params.date = dayjs(this.params.date || "", "YYYY-MM-DD").isValid()
+            ? this.params.date
+            : document.getElementById("date")?.value || dayjs().format("YYYY-MM-DD");
+
         this.content.innerHTML = ""
         await showHeader.call(this);
         // Action for additional post operations
@@ -32,9 +49,20 @@ async function showFooter() {
 
 // attaching events to header and footer and filling input fields if has queried data
 async function postLoadActions(postLoadAction) {
+    /////////////////////
+    //#region Fill main input fields
+    document.getElementById("searching-for").value = this.params.searchingFor;
+    document.getElementById("code").value = this.params.code;
+    document.getElementById("period").value = this.params.period;
+
+    if (this.params.period === "weeks") {
+        document.getElementById("weeks-count").value = this.params.weeksCount;
+        document.getElementById("weeks-count").hidden = false;
+    }
+
     flatpickr(document.getElementById("date"), {
         dateFormat: "Y-m-d",
-        defaultDate: !!this.params.date ? this.params.date.format("YYYY-MM-DD") : "today",
+        defaultDate: this.params.date,
         altFormat: "D, d M Y",
         altInput: true,
         disableMobile: true,
@@ -43,15 +71,8 @@ async function postLoadActions(postLoadAction) {
         },
         weekNumbers: true
     });
-
-    document.getElementById("code").value = this.params.code || "";
-    document.getElementById("searching-for").value = this.params.searchingFor || "group";
-    document.getElementById("period").value = this.params.period || "day";
-
-    if (!!this.params.weeksCount) {
-        document.getElementById("weeks-count").value = this.params.weeksCount;
-        document.getElementById("weeks-count").hidden = false;
-    }
+    //#endregion
+    ////////////////////
 
     // Form submit handler
     document.getElementById("submit-btn")

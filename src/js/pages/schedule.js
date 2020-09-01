@@ -11,11 +11,11 @@ export async function fetchSchedule() {
 
     dayjs.extend((await import("dayjs/plugin/isoWeek")).default)
 
-    if (!this.params.date) this.params.date = dayjs().format("YYYY-MM-DD")
+    if (!this.params.date) this.params.date = dayjs().format("YYYY-MM-DD");
 
-    this.params.date = dayjs(this.params.date, "YYYY-MM-DD")
+    const dayjsDateObj = dayjs(this.params.date, "YYYY-MM-DD");
 
-    const nvnaUrl = `http://nvna.eu/schedule/?group=${this.params.code}&queryType=${this.params.searchingFor}&Week=${this.params.date.isoWeek()}`;
+    const nvnaUrl = `http://nvna.eu/schedule/?group=${this.params.code}&queryType=${this.params.searchingFor}&Week=${dayjsDateObj.isoWeek()}`;
     let url = `${webScrapper}?url=${encodeURIComponent(nvnaUrl)}`;
 
     if (process.env.NODE_ENV === "development")
@@ -38,7 +38,7 @@ export async function fetchSchedule() {
     switch (this.params.period) {
         case "day":
             result.lessonDay = Lesson.getLessonWeek(data).days
-                .find(d => dayjs(d.date, "YYYY-MM-DD").format() === this.params.date.format());
+                .find(d => dayjs(d.date, "YYYY-MM-DD").format() === dayjsDateObj.format());
             daysArray
                 .push(result.lessonDay);
             break;
@@ -55,7 +55,7 @@ export async function fetchSchedule() {
             let urls = [];
             for (let i = 1; i < +this.params.weeksCount; i++) /* begin from 1 because we already have the first week */ {
                 const nvnaUrl =
-                    `http://nvna.eu/schedule/?group=${this.params.code}&queryType=${this.params.searchingFor}&Week=${this.params.date.isoWeek() + i}`;
+                    `http://nvna.eu/schedule/?group=${this.params.code}&queryType=${this.params.searchingFor}&Week=${dayjsDateObj.isoWeek() + i}`;
                 urls.push(fetch(`${webScrapper}?url=${encodeURIComponent(nvnaUrl)}`))
             }
 
