@@ -1,6 +1,6 @@
 import dayjs from "dayjs";
 import isoWeek from "dayjs/plugin/isoWeek";
-import {Lesson, LessonWeeks} from "./lesson";
+import {Lesson, LessonWeeks} from "../lesson";
 
 const webScrapper = `https://web--scrapper.herokuapp.com/webscrapper`;
 export const daysArray = [];
@@ -20,7 +20,7 @@ export async function fetchSchedule() {
     let url = `${webScrapper}?url=${encodeURIComponent(nvnaUrl)}`;
 
     if (process.env.NODE_ENV === "development")
-        url = './testData.json';
+        url = './testScheduleData.json';
 
     let data;
     try {
@@ -84,13 +84,13 @@ export async function fetchSchedule() {
 export async function showSchedule() {
     let schedule = "";
     if (this.event.previousResult.lessonDay) {
-        const dayTemplate = require("../templates/lesson/day.hbs");
+        const dayTemplate = require("../../templates/lesson/day.hbs");
         schedule += dayTemplate(this.event.previousResult.lessonDay);
     } else if (this.event.previousResult.lessonWeek) {
-        const weekTemplate = require("../templates/lesson/week.hbs");
+        const weekTemplate = require("../../templates/lesson/week.hbs");
         schedule += weekTemplate(this.event.previousResult.lessonWeek)
     } else if (this.event.previousResult.lessonWeeks) {
-        const weeksTemplate = require("../templates/lesson/weeks.hbs");
+        const weeksTemplate = require("../../templates/lesson/weeks.hbs");
         schedule += weeksTemplate(this.event.previousResult.lessonWeeks)
     }
 
@@ -106,7 +106,7 @@ export async function showSchedule() {
             </div>`
 
 
-    const downloadBtnTemplate = require("../templates/downloadBtn.hbs");
+    const downloadBtnTemplate = require("../../templates/downloadBtn.hbs");
     this.content.innerHTML += downloadBtnTemplate({});
 
     return async function () {

@@ -1,8 +1,8 @@
-import {showError} from "./notifications";
+import {showError} from "../notifications";
 
 export async function showAdvancedUsage() {
     const url = window.location.href.split("#")[0] + "#/";
-    const advancedUsageInstructionsTemplate = require("../templates/advancedUsageInstructions.hbs");
+    const advancedUsageInstructionsTemplate = require("../../templates/advancedUsageInstructions.hbs");
     this.content.innerHTML += advancedUsageInstructionsTemplate({location: url});
 
     return function () {

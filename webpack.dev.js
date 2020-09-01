@@ -8,7 +8,7 @@ module.exports  = merge(common, {
     plugins: [
         new CopyPlugin({
             patterns: [
-                {from: './src/testData.json'},
+                {from: './src/testScheduleData.json'}
             ]
         })
     ]

@@ -1,8 +1,8 @@
 import {Router} from "hash-router";
 import {applyCommonThen} from "./common";
-import {fetchSchedule, showSchedule} from "./schedule";
-import {showAdvancedUsage} from "./advancedUsage";
-import {showLecturerCodes, showTimetable} from "./more";
+import {fetchSchedule, showSchedule} from "./pages/schedule";
+import {showAdvancedUsage} from "./pages/advancedUsage";
+import {showLecturerCodes, showTimetable} from "./pages/more";
 
 function registerPaths() {
     [
