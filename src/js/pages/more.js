@@ -3,6 +3,8 @@ export async function showTimetable() {
 }
 
 export async function showLecturerCodes() {
-    this.content.innerHTML += `<p>Work in progress...</p>`;
-    // `<iframe style="position:absolute;border:none;width:100%;height:100%" src="https://bit.ly/32IoUe2"/>`
+    this.content.innerHTML +=
+    `<iframe id="lecturer-codes" style="position:absolute;border:none;width:100%;height:100%"/>`
+    this.content.querySelector("#lecturer-codes").contentDocument.documentElement.outerHTML =
+        await fetch(`https://web-harvester.herokuapp.com/?url=${encodeURIComponent("http://old-www.naval-acad.bg/infocenter/razpisanij/novo/kod-prepodav.htm")}`)
 }

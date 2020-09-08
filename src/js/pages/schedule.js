@@ -1,6 +1,6 @@
 import dayjs from "dayjs";
 
-const webScrapper = `https://web--scrapper.herokuapp.com/webscrapper`;
+const webScrapper = `https://web-harvester.herokuapp.com/`;
 export const daysArray = [];
 
 // "before" function: fetch schedule from remote

@@ -4592,6 +4592,11 @@ promise-inflight@^1.0.1:
   resolved "https://registry.yarnpkg.com/promise-inflight/-/promise-inflight-1.0.1.tgz#98472870bf228132fcbdd868129bad12c3c029e3"
   integrity sha1-mEcocL8igTL8vdhoEputEsPAKeM=
 
+promisify-jsonp@^1.1.1:
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/promisify-jsonp/-/promisify-jsonp-1.1.1.tgz#f52c46ba440cf1a65e3f7dec309a99331a0ed1cd"
+  integrity sha512-fEa7kn+M+pX01rBS/mW9D+7chtGMMl085EEvmEg4oyZhWRNjfFtscPLeOPVnzxtIjdjFEL5sfGK66WEWkQ1wcA==
+
 proxy-addr@~2.0.5:
   version "2.0.6"
   resolved "https://registry.yarnpkg.com/proxy-addr/-/proxy-addr-2.0.6.tgz#fdc2336505447d3f2f2c638ed272caf614bbb2bf"
@@ -5173,6 +5178,11 @@ slash@^3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/slash/-/slash-3.0.0.tgz#6539be870c165adbd5240220dbe361f1bc4d4634"
   integrity sha512-g9Q1haeby36OSStwb4ntCGGGaKsaVSjQ68fBxoQcutl5fS1vuY18H3wSt3jFyFtrkx+Kz0V1G85A4MyAdDMi2Q==
+
+smol-jsonp@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/smol-jsonp/-/smol-jsonp-1.0.0.tgz#b662c932a193f1a5c6bb1dcdaaddcd4e2007f7df"
+  integrity sha512-EwM2cKsq87A9cCKiAwfp7kVSRtAT01M/3HXaO3tYxP+pnEZ5zVYsxLdTnPjJVVIeK9O2zkV0QbWuwlHEUQNdOA==
 
 snapdragon-node@^2.0.1:
   version "2.1.1"
