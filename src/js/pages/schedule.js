@@ -18,9 +18,6 @@ export async function fetchSchedule() {
     const nvnaUrl = `http://nvna.eu/schedule/?group=${this.params.code}&queryType=${this.params.searchingFor}&Week=${dayjsDateObj.isoWeek()}`;
     let url = `${webScrapper}?url=${encodeURIComponent(nvnaUrl)}`;
 
-    if (process.env.NODE_ENV === "development")
-        url = './testScheduleData.json';
-
     let data;
     try {
         const response = await fetch(url);

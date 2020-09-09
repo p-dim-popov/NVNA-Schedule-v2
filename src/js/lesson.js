@@ -23,7 +23,7 @@ export class Lesson {
 
     static _getDataArray(data) {
         let table = document.createElement('table');
-        table.innerHTML = data.match(/<table>[.\s\S]*?<\/table>/uimg)[0];
+        table.innerHTML = data.contents.match(/<table>[.\s\S]*?<\/table>/uimg)[0];
         return [...table.getElementsByTagName("tbody")[0].children]
             .map(tr => {
                 if (tr.firstElementChild &&
