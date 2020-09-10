@@ -23,21 +23,27 @@ export async function fetchSchedule() {
         const response = await fetch(url);
         data = await response.json();
     } catch (e) {
-        window.location.reload()
+        try {
+            fetch("http://google.bg")
+        } catch (e) {
+            window.location.reload()
+        }
     }
 
     if (!this.params.period) this.params.period = "day";
 
-    const { Lesson, LessonWeeks} = await import("../lesson");
+    const {Lesson, LessonWeeks} = await import("../lesson");
 
     const result = {};
     daysArray.length = 0; // clear old queried data
     switch (this.params.period) {
         case "day":
-            result.lessonDay = Lesson.getLessonWeek(data).days
+            const lessonWeek = Lesson.getLessonWeek(data);
+            const lessonDay = lessonWeek.days
                 .find(d => dayjs(d.date, "YYYY-MM-DD").format() === dayjsDateObj.format());
+            result.lessonDay = {day: lessonDay, week: lessonWeek}; //in view page will be scrolled to requested day
             daysArray
-                .push(result.lessonDay);
+                .push(lessonDay); //push lesson day because actually only the day was requested
             break;
         case "week":
             result.lessonWeek = Lesson.getLessonWeek(data);
@@ -82,8 +88,8 @@ export async function fetchSchedule() {
 export async function showSchedule() {
     let schedule = "";
     if (this.event.previousResult.lessonDay) {
-        const dayTemplate = require("../../templates/lesson/day.hbs");
-        schedule += dayTemplate(this.event.previousResult.lessonDay);
+        const weekTemplate = require("../../templates/lesson/week.hbs");
+        schedule += weekTemplate(this.event.previousResult.lessonDay.week);
     } else if (this.event.previousResult.lessonWeek) {
         const weekTemplate = require("../../templates/lesson/week.hbs");
         schedule += weekTemplate(this.event.previousResult.lessonWeek)
@@ -107,7 +113,7 @@ export async function showSchedule() {
     const downloadBtnTemplate = require("../../templates/downloadBtn.hbs");
     this.content.innerHTML += downloadBtnTemplate({});
 
-    return async function () {
+    return async () => {
         [...document.querySelectorAll(".subject")]
             .forEach(s => s.addEventListener("click", (e) => {
                     if (!e.target) return;
@@ -145,5 +151,12 @@ export async function showSchedule() {
                     }, 0);
                 }
             })
+
+        if (!!this.event.previousResult.lessonDay) {
+            document.getElementById(this.event.previousResult.lessonDay.day.date).scrollIntoView({
+                block: 'start',
+                behaviour: 'smooth'
+            })
+        }
     }
 }
