@@ -81,6 +81,12 @@ export async function fetchSchedule() {
             return; //redirect to error
     }
 
+    result.preparedParams = {
+        code: this.params.code,
+        searchingFor: this.params.searchingFor,
+        week: dayjsDateObj.isoWeek()
+    }
+
     this.task.done(result);
 }
 
@@ -98,8 +104,31 @@ export async function showSchedule() {
         schedule += weeksTemplate(this.event.previousResult.lessonWeeks)
     }
 
+    const hrefPreviousWeek = `#` +
+    `/${this.params.searchingFor}` +
+    `/${this.params.code}` +
+    `/${this.params.period}` +
+    `/${dayjs(this.params.date, "YYYY-MM-DD").add(-(this.params.weeksCount || 1), 'week').format("YYYY-MM-DD")}` +
+    `${this.params.period === 'weeks' ? '/' + this.params.weeksCount : ''}`;
+
+    const hrefNextWeek = `#` +
+    `/${this.params.searchingFor}` +
+    `/${this.params.code}` +
+    `/${this.params.period}` +
+    `/${dayjs(this.params.date, "YYYY-MM-DD").add((this.params.weeksCount || 1), 'week').format("YYYY-MM-DD")}` +
+    `${this.params.period === 'weeks' ? '/' + this.params.weeksCount : ''}`;
+
+    const previousNextButtons =
+        `
+        <div class="row justify-content-between">
+            <a class="btn btn-primary" href="${hrefPreviousWeek}" role="button">Предишна седмица</a>
+            <a class="btn btn-primary" href="${hrefNextWeek}" role="button">Следваща седмица</a>
+        </div>
+        `;
+
     this.content.innerHTML +=
         `<div class="container">
+                ${previousNextButtons}
                 <div class="row justify-content-center">
                     <div class="col"/>
                     <div class="col-auto">
@@ -107,6 +136,7 @@ export async function showSchedule() {
                     </div>
                     <div class="col"/>
                 </div>
+                ${previousNextButtons}
             </div>`
 
 
