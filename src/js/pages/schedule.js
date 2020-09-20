@@ -104,25 +104,32 @@ export async function showSchedule() {
         schedule += weeksTemplate(this.event.previousResult.lessonWeeks)
     }
 
+    dayjs.extend((await import("dayjs/plugin/weekday")).default)
     const hrefPreviousWeek = `#` +
     `/${this.params.searchingFor}` +
     `/${this.params.code}` +
     `/${this.params.period}` +
-    `/${dayjs(this.params.date, "YYYY-MM-DD").add(-(this.params.weeksCount || 1), 'week').format("YYYY-MM-DD")}` +
+    `/${dayjs(this.params.date, "YYYY-MM-DD")
+        .add(-(this.params.weeksCount || 1), 'week')
+        .weekday(1)
+        .format("YYYY-MM-DD")}` +
     `${this.params.period === 'weeks' ? '/' + this.params.weeksCount : ''}`;
 
     const hrefNextWeek = `#` +
     `/${this.params.searchingFor}` +
     `/${this.params.code}` +
     `/${this.params.period}` +
-    `/${dayjs(this.params.date, "YYYY-MM-DD").add((this.params.weeksCount || 1), 'week').format("YYYY-MM-DD")}` +
+    `/${dayjs(this.params.date, "YYYY-MM-DD")
+        .add((this.params.weeksCount || 1), 'week')
+        .weekday(1)
+        .format("YYYY-MM-DD")}` +
     `${this.params.period === 'weeks' ? '/' + this.params.weeksCount : ''}`;
 
     const previousNextButtons =
         `
         <div class="row justify-content-between">
-            <a class="btn btn-primary" href="${hrefPreviousWeek}" role="button">Предишна седмица</a>
-            <a class="btn btn-primary" href="${hrefNextWeek}" role="button">Следваща седмица</a>
+            <a class="btn btn-secondary" href="${hrefPreviousWeek}" role="button">Предишна седмица</a>
+            <a class="btn btn-secondary" href="${hrefNextWeek}" role="button">Следваща седмица</a>
         </div>
         `;
 
