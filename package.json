@@ -24,7 +24,7 @@
     "core-js": "3",
     "dayjs": "^1.8.34",
     "flatpickr": "^4.6.6",
-    "handlebars": "^4.7.6",
+    "handlebars": "^4.7.7",
     "hash-router": "github:p-dim-popov/Hash-Router#master",
     "promisify-jsonp": "^1.1.1",
     "smol-jsonp": "^1.0.0"
